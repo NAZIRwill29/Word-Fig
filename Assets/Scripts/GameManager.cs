@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public List<int> weaponPrices;
     public List<int> xpTable;
     public Player player;
+    public FloatingTextManager floatingTextManager;
     //logic
     public int pesos;
     public int experience;
@@ -27,6 +28,12 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += LoadState;
         //prevent from destroyed
         DontDestroyOnLoad(gameObject);
+    }
+
+    //to make as reference call function in floatingtextmanager script
+    public void ShowText(string msg, int fontSize, Color color, Vector3 position, Vector3 motion, float duration)
+    {
+        floatingTextManager.Show(msg, fontSize, color, position, motion, duration);
     }
 
     public void SaveState()

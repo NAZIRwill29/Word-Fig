@@ -1,18 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class FloatingText : MonoBehaviour
+public class FloatingText
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool active;
+    public GameObject go;
+    public Text txt;
+    public Vector3 motion;
+    public float duration;
+    public float lastShown;
+    //show text
+    public void Show()
     {
-        
+        active = true;
+        //time at the present
+        lastShown = Time.time;
+        go.SetActive(active);
     }
 
-    // Update is called once per frame
-    void Update()
+    //hide text
+    public void Hide()
     {
-        
+        active = false;
+        go.SetActive(active);
+    }
+
+    public void UpdateFloatingText()
+    {
+        if (!active)
+            return;
+        //if show is more than duration
+        if (Time.time - lastShown > duration)
+            Hide();
+        go.transform.position += motion * Time.deltaTime;
     }
 }
