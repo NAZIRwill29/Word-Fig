@@ -1548,7 +1548,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851560810}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1614,6 +1614,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Show
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 994154744}
+        m_TargetAssemblyTypeName: CharacterMenu, Assembly-CSharp
+        m_MethodName: UpdateMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &851560813
@@ -1837,6 +1849,7 @@ GameObject:
   - component: {fileID: 994154738}
   - component: {fileID: 994154742}
   - component: {fileID: 994154743}
+  - component: {fileID: 994154744}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -1912,20 +1925,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 994154737}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1016002465}
   - {fileID: 2083520487}
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 1759882680}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 225.05135}
+  m_SizeDelta: {x: 800, y: 450.1027}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &994154742
 Animator:
   serializedVersion: 3
@@ -1957,6 +1970,26 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &994154744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994154737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6476ed857e9e77048a09f14844fa88ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelText: {fileID: 1984702522}
+  hitpointText: {fileID: 984583801}
+  pesosText: {fileID: 2077318383}
+  upgradeCostText: {fileID: 1013577708}
+  xpText: {fileID: 1411031404}
+  characterSelectionSprite: {fileID: 1036883065}
+  weaponSprite: {fileID: 1987477189}
+  xpBar: {fileID: 2039730964}
 --- !u!1 &1013577706
 GameObject:
   m_ObjectHideFlags: 0
@@ -2197,12 +2230,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af98f0180684534da4d679998d40fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSprites: []
-  weaponSprites: []
-  weaponPrices: 
-  xpTable: 
+  playerSprites:
+  - {fileID: -4232372475135122399, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: 7553454342033508592, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: -1067665510509528309, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: -8248157553010839229, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: -6845980268273053146, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: 7401702256180518906, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: -8168956363209427361, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  weaponSprites:
+  - {fileID: -5979032450848295065, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: -4597677020248401452, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: 9080921748905162181, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  weaponPrices: 0f0000001e00000032000000
+  xpTable: 14000000280000003c0000005a00000082000000a0000000d2000000180100005e010000ae010000
   player: {fileID: 1312986068}
   floatingTextManager: {fileID: 956571659}
+  weapon: {fileID: 1904939142}
   pesos: 0
   experience: 0
 --- !u!4 &1023653487
@@ -2442,7 +2486,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1232415384}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 994154744}
+        m_TargetAssemblyTypeName: CharacterMenu, Assembly-CSharp
+        m_MethodName: OnUpgradeClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1232415384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2662,7 +2718,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -38065,10 +38121,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 4
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -38076,7 +38132,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: '>'
 --- !u!222 &1514062295
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -38325,7 +38381,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1671305702}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 994154744}
+        m_TargetAssemblyTypeName: CharacterMenu, Assembly-CSharp
+        m_MethodName: OnArrowClick
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1671305702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39152,7 +39220,7 @@ GameObject:
   - component: {fileID: 1759882678}
   - component: {fileID: 1759882677}
   m_Layer: 5
-  m_Name: HUD
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39232,8 +39300,9 @@ RectTransform:
   m_Children:
   - {fileID: 956571658}
   - {fileID: 851560811}
+  - {fileID: 994154741}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -39333,7 +39402,7 @@ GameObject:
   - component: {fileID: 1904939142}
   - component: {fileID: 1904939145}
   m_Layer: 0
-  m_Name: Weapon_1
+  m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39379,24 +39448,13 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  damagePoint: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e000000
+  damagePoint: 010000000200000003000000
   pushForce:
   - 1
   - 1.2
   - 1.4
-  - 1.6
-  - 2
-  - 2.3
-  - 2.6
-  - 2.8
-  - 3
-  - 3.2
-  - 3.5
-  - 3.7
-  - 4
-  - 4.5
   weaponLevel: 0
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 1904939144}
 --- !u!61 &1904939143
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39414,7 +39472,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.12, y: 0.29}
+    oldSize: {x: 0.12, y: 0.3}
     newSize: {x: 0.12, y: 0.29}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -39552,18 +39610,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 0
+    m_MaxSize: 225
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: <
 --- !u!222 &1918569311
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -39733,7 +39791,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1942807984}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 994154744}
+        m_TargetAssemblyTypeName: CharacterMenu, Assembly-CSharp
+        m_MethodName: OnArrowClick
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1942807984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40282,7 +40352,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4927590812548679988, guid: d1a6ba6a1c4ea9140b445d7bacb1994a, type: 3}
       propertyPath: chaseLength
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4927590812548679988, guid: d1a6ba6a1c4ea9140b445d7bacb1994a, type: 3}
       propertyPath: triggerLength

@@ -347,6 +347,12 @@ TextureImporter:
   - first:
       213: -5979032450848295065
     second: Weapon_1
+  - first:
+      213: -4597677020248401452
+    second: Weapon_2
+  - first:
+      213: 9080921748905162181
+    second: Weapon_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -2884,9 +2890,9 @@ TextureImporter:
         x: 146
         y: 225
         width: 12
-        height: 29
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2894,6 +2900,48 @@ TextureImporter:
       bones: []
       spriteID: 76777aa0aa5360da0800000000000000
       internalID: -5979032450848295065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_2
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 225
+        width: 12
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d91e101c15c130c0800000000000000
+      internalID: -4597677020248401452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 225
+        width: 12
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c57c94c73ae50e70800000000000000
+      internalID: 9080921748905162181
       vertices: []
       indices: 
       edges: []
