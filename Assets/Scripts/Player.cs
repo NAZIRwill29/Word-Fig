@@ -15,7 +15,7 @@ public class Player : Mover
     // Update is called once per frame
     void FixedUpdate()
     {
-        //get input from user
+        //get input from user for move player
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 
