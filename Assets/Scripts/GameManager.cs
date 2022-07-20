@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     //logic
     public int pesos;
     public int experience;
+    public RectTransform hitpointBar;
+    public GameObject canvas;
+    public Animator deathMenuAnim;
 
     private void Awake()
     {
@@ -23,12 +26,13 @@ public class GameManager : MonoBehaviour
         if (GameManager.instance != null)
         {
             Destroy(gameObject);
+            Destroy(player.gameObject);
+            Destroy(canvas);
             return;
         }
         instance = this;
         SceneManager.sceneLoaded += LoadState;
-        //prevent from destroyed
-        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     //to make as reference call function in floatingtextmanager script
@@ -87,7 +91,21 @@ public class GameManager : MonoBehaviour
     public void OnLevelUp()
     {
         player.OnLevelUp();
-        // OnHitpointChange();
+        //for raise hp after level up 
+        OnHitpointChange();
+    }
+    //hitpoint bar
+    public void OnHitpointChange()
+    {
+        float ratio = (float)player.hitpoint / (float)player.maxHitpoint;
+        hitpointBar.localScale = new Vector3(ratio, 1, 1);
+    }
+    //death menu and respawn
+    public void Respawn()
+    {
+        deathMenuAnim.SetTrigger("Hide");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+        player.Respawn();
     }
 
     public void SaveState()
@@ -118,5 +136,14 @@ public class GameManager : MonoBehaviour
         //set level of player
         if (GetCurrentLevel() != 1)
             player.SetLevel(GetCurrentLevel());
+        player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+        //make call only once only
+        SceneManager.sceneLoaded -= LoadState;
+    }
+    //on scene loaded - call every time load scene
+    public void OnSceneLoaded(Scene s, LoadSceneMode mode)
+    {
+        //set spawn point
+        player.transform.position = GameObject.Find("SpawnPoint").transform.position;
     }
 }

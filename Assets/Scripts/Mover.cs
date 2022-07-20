@@ -8,12 +8,14 @@ public abstract class Mover : Fighter
     protected BoxCollider2D boxCollider;
     protected Vector3 moveDelta;
     protected RaycastHit2D hit;
-    protected float ySpeed = 0.7f;
-    protected float xSpeed = 1.0f;
+    public float ySpeed = 0.7f;
+    public float xSpeed = 1.0f;
+    private Vector3 originalSize;
     // Start is called before the first frame update
     protected virtual void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        originalSize = transform.localScale;
     }
 
     protected virtual void UpdateMotor(Vector3 input)
@@ -23,9 +25,9 @@ public abstract class Mover : Fighter
 
         //make player face direction it walk
         if (moveDelta.x > 0)
-            transform.localScale = Vector3.one;
+            transform.localScale = originalSize;
         else if (moveDelta.x < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(originalSize.x * -1, originalSize.y, originalSize.z);
 
         //add push vector, if any
         moveDelta += pushDirection;
