@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +21,22 @@ public class GameManager : MonoBehaviour
     public RectTransform hitpointBar;
     public GameObject canvas;
     public Animator deathMenuAnim;
+    public Text infoLevelText;
+    public InputField userNameInput;
+    public Text userNameText;
+    public string userName;
+    // private string dataSave;
+
+    //required for JsonUtility
+    //it will only transform things to JSON if they are tagged as Serializable.
+    [System.Serializable]
+    class SaveData
+    {
+        public string userName;
+        public int pesos;
+        public int experience;
+        public int weaponLevel;
+    }
 
     private void Awake()
     {
@@ -33,6 +51,25 @@ public class GameManager : MonoBehaviour
         instance = this;
         SceneManager.sceneLoaded += LoadState;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        //userNameInput.GetComponentInChildren<Text>().text = userName;
+    }
+
+    //when on game turn on player and canvas
+    public void OnStartGame()
+    {
+        SceneManager.sceneLoaded += LoadState;
+        player.gameObject.SetActive(true);
+        canvas.SetActive(true);
+        //fill in info
+        infoLevelText.text = "Lv " + GetCurrentLevel().ToString();
+        userName = userNameInput.text;
+        userNameText.text = userName;
+    }
+    //when on MainMenu scene turn off player and canvas
+    public void OnMainMenu()
+    {
+        player.gameObject.SetActive(false);
+        canvas.SetActive(false);
     }
 
     //to make as reference call function in floatingtextmanager script
@@ -93,6 +130,8 @@ public class GameManager : MonoBehaviour
         player.OnLevelUp();
         //for raise hp after level up 
         OnHitpointChange();
+        //set leveltext at info
+        infoLevelText.text = "Lv " + GetCurrentLevel().ToString();
     }
     //hitpoint bar
     public void OnHitpointChange()
@@ -104,41 +143,95 @@ public class GameManager : MonoBehaviour
     public void Respawn()
     {
         deathMenuAnim.SetTrigger("Hide");
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
         player.Respawn();
     }
 
     public void SaveState()
     {
+        //-----------------------
+        // dataSave = "";
+
+        // dataSave += "0" + "|";
+        // dataSave += pesos.ToString() + "|";
+        // dataSave += experience.ToString() + "|";
+        // dataSave += weapon.weaponLevel.ToString() + "|";
+        // dataSave += userName;
+
+        // PlayerPrefs.SetString("SaveState", dataSave);
+        //-----------------------
+
+        //save variable
+        SaveData data = new SaveData();
+        data.userName = userName;
+        data.pesos = pesos;
+        data.experience = experience;
+        data.weaponLevel = weapon.weaponLevel;
+        //transform instance to json
+        string json = JsonUtility.ToJson(data);
+        //method to write string to a file
+        /*Application.persistentDataPath - give you a folder where you can save data that 
+        will survive between application reinstall or update and append to it the filename savefile.json*/
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
         Debug.Log("Save state");
-        string s = "";
+    }
 
-        s += "0" + "|";
-        s += pesos.ToString() + "|";
-        s += experience.ToString() + "|";
-        s += weapon.weaponLevel.ToString();
-
-        PlayerPrefs.SetString("SaveState", s);
+    public void ResetSaveState()
+    {
+        pesos = 0;
+        experience = 0;
+        weapon.weaponLevel = 0;
+        userName = "";
+        SaveState();
+        Debug.Log("Resetsave");
+        SceneManager.sceneLoaded += LoadState;
+        Debug.Log("Resetload");
     }
 
     //load game
     public void LoadState(Scene s, LoadSceneMode mode)
     {
-        Debug.Log("Load state");
+        //get path of saved data
+        string path = Application.persistentDataPath + "/savefile.json";
+        //check if exist
+        if (File.Exists(path))
+        {
+            Debug.Log("Load state");
+            //read content
+            string json = File.ReadAllText(path);
+            //transform into SaveData instance
+            SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
+            //set gameData refer SaveData
+            //change player info
+            userName = dataLoad.userName;
+            Debug.Log(userName);
+            pesos = dataLoad.pesos;
+            experience = dataLoad.experience;
+            weapon.weaponLevel = dataLoad.weaponLevel;
+            //set level of player
+            if (GetCurrentLevel() != 1)
+                player.SetLevel(GetCurrentLevel());
+            player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+            //make call only once only
+            SceneManager.sceneLoaded -= LoadState;
+        }
+        //----------------------------
         //check if has save data
-        if (!PlayerPrefs.HasKey("SaveState"))
-            return;
-        string[] data = PlayerPrefs.GetString("SaveState").Split('|');
+        // if (!PlayerPrefs.HasKey("SaveState"))
+        //     return;
+        //string[] data = PlayerPrefs.GetString("SaveState").Split('|');
+        // string[] data = "0|0|0|0".Split('|');
         //change player skin
-        pesos = int.Parse(data[1]);
-        experience = int.Parse(data[2]);
-        weapon.weaponLevel = int.Parse(data[3]);
+        // pesos = int.Parse(data[1]);
+        // experience = int.Parse(data[2]);
+        // weapon.weaponLevel = int.Parse(data[3]);
         //set level of player
-        if (GetCurrentLevel() != 1)
-            player.SetLevel(GetCurrentLevel());
-        player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+        // if (GetCurrentLevel() != 1)
+        //     player.SetLevel(GetCurrentLevel());
+        // player.transform.position = GameObject.Find("SpawnPoint").transform.position;
         //make call only once only
-        SceneManager.sceneLoaded -= LoadState;
+        // SceneManager.sceneLoaded -= LoadState;
+        //-------------------------------
     }
     //on scene loaded - call every time load scene
     public void OnSceneLoaded(Scene s, LoadSceneMode mode)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CharacterMenu : MonoBehaviour
 {
@@ -77,5 +78,13 @@ public class CharacterMenu : MonoBehaviour
             xpBar.localScale = new Vector3(completionRatio, 1, 1);
             xpText.text = currXpIntoLevel.ToString() + " / " + diff;
         }
+    }
+
+    //Back to MainMenuScene
+    public void BackToMenu()
+    {
+        GameManager.instance.OnMainMenu();
+        GameManager.instance.SaveState();
+        SceneManager.LoadScene(0);
     }
 }
