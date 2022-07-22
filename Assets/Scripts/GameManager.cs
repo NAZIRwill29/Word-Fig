@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
             //set gameData refer SaveData
             //change player info
             userName = dataLoad.userName;
-            Debug.Log(userName);
+            //Debug.Log(userName);
             pesos = dataLoad.pesos;
             experience = dataLoad.experience;
             weapon.weaponLevel = dataLoad.weaponLevel;

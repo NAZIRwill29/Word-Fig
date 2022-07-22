@@ -9,10 +9,13 @@ public class Collidable : MonoBehaviour
     private BoxCollider2D boxCollider;
     //for what hit it
     private Collider2D[] hits = new Collider2D[10];
+    public AudioClip triggerSound;
+    protected AudioSource collidableAudio;
     // Start is called before the first frame update
     protected virtual void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        collidableAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -35,4 +38,5 @@ public class Collidable : MonoBehaviour
     {
         Debug.Log("OnCollide was not implemented in " + this.name);
     }
+
 }

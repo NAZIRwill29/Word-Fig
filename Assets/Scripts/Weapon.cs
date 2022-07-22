@@ -42,6 +42,8 @@ public class Weapon : Collidable
     private void Swing()
     {
         anim.SetTrigger("Swing");
+        //make sound effect when attack
+        collidableAudio.PlayOneShot(triggerSound, 1.0f);
     }
 
     protected override void OnCollide(Collider2D coll)
@@ -53,7 +55,7 @@ public class Weapon : Collidable
             if (coll.name != "Player")
             {
                 //send message
-                Debug.Log(coll.name);
+                //Debug.Log(coll.name);
                 //create new dmg obj, send to fighter
                 Damage dmg = new Damage
                 {
@@ -61,7 +63,7 @@ public class Weapon : Collidable
                     origin = transform.position,
                     pushForce = pushForce[weaponLevel]
                 };
-                //send message
+                //send message to call function ReceiveDamage in fighter.cs
                 coll.SendMessage("ReceiveDamage", dmg);
             }
         }

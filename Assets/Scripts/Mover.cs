@@ -11,11 +11,16 @@ public abstract class Mover : Fighter
     public float ySpeed = 0.7f;
     public float xSpeed = 1.0f;
     private Vector3 originalSize;
+    public AudioClip triggerSound;
+    protected AudioSource moverAudio;
+    protected float lastImmuneMover;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         originalSize = transform.localScale;
+        moverAudio = GetComponent<AudioSource>();
     }
 
     protected virtual void UpdateMotor(Vector3 input)
@@ -52,5 +57,19 @@ public abstract class Mover : Fighter
             //move player in x
             transform.Translate(moveDelta.x * Time.deltaTime, 0, 0);
         }
+    }
+
+    protected override void ReceiveDamage(Damage dmg)
+    {
+        if (Time.time - lastImmuneMover > immuneTime)
+        {
+            lastImmuneMover = Time.time;
+            //make sound effect when collide
+            moverAudio.PlayOneShot(triggerSound, 1.0f);
+            //Debug.Log("play sound");
+        }
+        base.ReceiveDamage(dmg);
+
+
     }
 }

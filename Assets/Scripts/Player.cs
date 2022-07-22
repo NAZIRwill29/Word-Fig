@@ -6,6 +6,7 @@ public class Player : Mover
 {
     private SpriteRenderer spriteRenderer;
     private bool isAlive = true;
+    public AudioClip healSound;
     protected override void Start()
     {
         base.Start();
@@ -50,7 +51,10 @@ public class Player : Mover
         if (hitpoint > maxHitpoint)
             hitpoint = maxHitpoint;
         GameManager.instance.ShowText("+" + healingAmount.ToString() + "hp", 25, Color.green, transform.position, Vector3.up * 30, 1.0f);
+        //change hp
         GameManager.instance.OnHitpointChange();
+        //heal sound
+        moverAudio.PlayOneShot(triggerSound, 1.0f);
     }
     // when receive damage
     protected override void ReceiveDamage(Damage dmg)
@@ -59,6 +63,8 @@ public class Player : Mover
             return;
         base.ReceiveDamage(dmg);
         GameManager.instance.OnHitpointChange();
+        //make sound effect when collide
+        //playerAudio.PlayOneShot(triggerSound, 1.0f);
     }
     //death
     protected override void Death()

@@ -16,6 +16,8 @@ public class Portal : Collidable
             SceneManager.LoadScene(sceneName);
             //save game
             GameManager.instance.SaveState();
+            //make sound effect when attack
+            collidableAudio.PlayOneShot(triggerSound, 1.0f);
         }
     }
 }
