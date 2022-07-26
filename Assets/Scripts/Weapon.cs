@@ -49,7 +49,7 @@ public class Weapon : Collidable
     protected override void OnCollide(Collider2D coll)
     {
         //check tag obj
-        if (coll.tag == "Fighter")
+        if (coll.tag == "Fighter" || coll.tag == "Destructable")
         {
             //check name obj
             if (coll.name != "Player")

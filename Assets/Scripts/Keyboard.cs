@@ -6,14 +6,16 @@ public class Keyboard : MonoBehaviour
 {
     public GameObject charPrefab;
     protected GameObject wordObject;
-    static int charNo = 0;
+    protected GameObject tempChar;
+    private int charNo = 0;
     protected GameObject charObj;
     protected GameObject targetChar;
     protected CanvasGroup keyboardCG;
+    public char letterClick;
     public char[] letters = new char[]
     {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        'A', 'A', 'A', 'A', 'B', 'C', 'D', 'E', 'E', 'E', 'E', 'F', 'G', 'H', 'I', 'I', 'I', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'O', 'O', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'U', 'U', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
 
     // Start is called before the first frame update
@@ -22,10 +24,11 @@ public class Keyboard : MonoBehaviour
         targetChar = GameObject.Find("Boss_3");
         charObj = GameObject.Find("CharObj");
         wordObject = GameObject.Find("Word");
+        tempChar = GameObject.Find("TempChar");
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // if (Input.GetKeyDown(KeyCode.Space))
         if (Input.GetButtonDown("Jump"))
@@ -45,17 +48,15 @@ public class Keyboard : MonoBehaviour
             Instantiate(charPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
             charNo += 1;
             Debug.Log(charNo);
-            //create random letter
-            int randomNo = Random.Range(0, letters.Length);
-            //TODO - CHANGE PROPERTY OF CHAR ACCORDING TO RANDOM LETTER
 
         }
     }
 
-    //make char shoot to target
-    protected void CharToShoot()
+    //make char shoot to target and pass letter
+    protected void CharToShoot(char letter)
     {
-        charObj.GetComponent<CharObj>().ShootWord(targetChar);
+        Debug.Log("letterClick = " + letter);
+        charObj.GetComponent<CharObj>().ShootWord(targetChar, letter);
     }
 
     //function after button click
@@ -64,6 +65,13 @@ public class Keyboard : MonoBehaviour
         charNo -= 1;
         Debug.Log(charNo);
         keyboardCG.interactable = false;
+    }
+
+    //create random letter
+    protected char RandomLetter()
+    {
+        int randomNo = Random.Range(0, letters.Length);
+        return letters[randomNo];
     }
 
     // protected void DisableClick()
