@@ -26,16 +26,16 @@ public class Weapon : Collidable
     {
         base.Update();
         // if (Input.GetKeyDown(KeyCode.Space))
-        if (Input.GetButtonDown("Jump"))
-        {
-            //check cooldown
-            if (Time.time - lastSwing > cooldown)
-            {
-                lastSwing = Time.time;
-                //swing weapon
-                Swing();
-            }
-        }
+        // if (Input.GetButtonDown("Jump"))
+        // {
+        //     //check cooldown
+        //     if (Time.time - lastSwing > cooldown)
+        //     {
+        //         lastSwing = Time.time;
+        //         //swing weapon
+        //         Swing();
+        //     }
+        // }
     }
 
     //method swing weapon
@@ -63,7 +63,7 @@ public class Weapon : Collidable
                     origin = transform.position,
                     pushForce = pushForce[weaponLevel]
                 };
-                //send message to call function ReceiveDamage in fighter.cs
+                //send message to coll to make call ReceiveDamage function in fighter.cs
                 coll.SendMessage("ReceiveDamage", dmg);
             }
         }

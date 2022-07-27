@@ -20,7 +20,7 @@ public class EnemyHitbox : Collidable
                 origin = transform.position,
                 pushForce = pushForce
             };
-            //send message to call ReceiveDamage function
+            //send message to coll to make call ReceiveDamage function
             coll.SendMessage("ReceiveDamage", dmg);
         }
     }

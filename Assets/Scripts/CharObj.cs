@@ -10,12 +10,17 @@ public class CharObj : MonoBehaviour
     public GameObject keyboard;
     private GameObject tempChar;
     public char letter;
+    private int damage = 1;
+    private float pushForce = 1;
+    private AudioSource charObjAudio;
+    public AudioClip triggerSound;
     // Start is called before the first frame update
     void Start()
     {
         charRb = GetComponent<Rigidbody2D>();
         charSR = GetComponent<SpriteRenderer>();
         tempChar = GameObject.Find("TempChar");
+        charObjAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,10 +34,11 @@ public class CharObj : MonoBehaviour
     {
         //get letter from char
         letter = letterClick;
-        Debug.Log("LetterCharObj = " + letter);
+        // Debug.Log("LetterCharObj = " + letter);
         //turn on SpriteRendere
         charSR.enabled = true;
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
+        charObjAudio.PlayOneShot(triggerSound, 1.0f);
     }
 
     //method trigger when collide
@@ -42,10 +48,15 @@ public class CharObj : MonoBehaviour
         {
             if (other.name != "Player")
             {
-                AfterCollide();
+                AfterCollide(other);
                 //move char to word
-                tempChar.GetComponent<TempChar>().AddToWord(letter);
+                tempChar.GetComponent<TempChar>().CharAddToWord(letter);
             }
+        }
+        else if (other.tag == "Destructable")
+        {
+            AfterCollide(other);
+            tempChar.GetComponent<TempChar>().CharAddToBirth();
         }
         else if (other.tag == "Weapon")
         {
@@ -55,16 +66,38 @@ public class CharObj : MonoBehaviour
         {
             Debug.Log("none");
             AfterCollide();
-            //delete char in temp
-            tempChar.GetComponent<TempChar>().DeleteChar();
+            tempChar.GetComponent<TempChar>().CharAddToBirth();
         }
     }
 
+    //after collide without damage
     private void AfterCollide()
     {
         //hide charObj
         charSR.enabled = false;
-        Debug.Log("trigger");
+        // Debug.Log("trigger");
+        //stop force
+        charRb.velocity = Vector2.zero;
+        //make to original posistion
+        gameObject.transform.position = GameManager.instance.player.transform.position;
+        //enable keyboard interaction
+        keyboard.GetComponent<CanvasGroup>().interactable = true;
+    }
+    //after collide with damage
+    private void AfterCollide(Collider2D other)
+    {
+        //Create new dmg obj b4 send to enemy
+        Damage dmg = new Damage
+        {
+            damageAmount = damage,
+            origin = transform.position,
+            pushForce = pushForce
+        };
+        //send message to other to make call ReceiveDamage function
+        other.SendMessage("ReceiveDamage", dmg);
+        //hide charObj
+        charSR.enabled = false;
+        // Debug.Log("trigger");
         //stop force
         charRb.velocity = Vector2.zero;
         //make to original posistion

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8560793389394692684}
   m_Layer: 0
   m_Name: FireSpirit (1)
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 5587063267508807122}
   m_Layer: 0
   m_Name: Hitbox
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -597,8 +597,8 @@ MonoBehaviour:
   xSpeed: 0.5
   triggerSound: {fileID: 8300000, guid: e7ee25a47d63b46cdaf65480d62b405c, type: 3}
   xpValue: 10
-  triggerLength: 1
-  chaseLength: 5
+  triggerLength: 0
+  chaseLength: 0
   filter:
     useTriggers: 0
     useLayerMask: 0
@@ -773,7 +773,7 @@ GameObject:
   - component: {fileID: 8378488929972991097}
   m_Layer: 0
   m_Name: FireSpirit
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

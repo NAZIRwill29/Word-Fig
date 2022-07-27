@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Fighter
   - Weapon
+  - Destructable
   layers:
   - Default
   - TransparentFX

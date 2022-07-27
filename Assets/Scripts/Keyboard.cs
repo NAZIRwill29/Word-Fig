@@ -5,83 +5,79 @@ using UnityEngine;
 public class Keyboard : MonoBehaviour
 {
     public GameObject charPrefab;
-    protected GameObject wordObject;
-    protected GameObject tempChar;
-    private int charNo = 0;
-    protected GameObject charObj;
-    protected GameObject targetChar;
-    protected CanvasGroup keyboardCG;
+    public GameObject wordObject;
+    public GameObject tempChar;
+    public GameObject charObj;
+    public GameObject targetChar;
+    private CanvasGroup keyboardCG;
     public char letterClick;
-    public char[] letters = new char[]
+    public GameObject birthChar;
+    private BirthChar birthCharScript;
+    private char[] letters = new char[]
     {
-        'A', 'A', 'A', 'A', 'B', 'C', 'D', 'E', 'E', 'E', 'E', 'F', 'G', 'H', 'I', 'I', 'I', 'I', 'J', 'K', 'L', 'M', 'N',
-        'O', 'O', 'O', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'U', 'U', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        'A', 'A', 'A', 'A', 'A', 'A', 'A',
+        'B', 'B', 'B',
+        'C', 'C', 'C',
+        'D', 'D', 'D',
+        'E', 'E', 'E', 'E', 'E', 'E', 'E',
+        'F', 'F', 'F',
+        'G', 'G',
+        'H', 'H', 'H',
+        'I', 'I', 'I', 'I', 'I', 'I', 'I',
+        'J', 'J',
+        'K', 'K', 'K',
+        'L', 'L', 'L',
+        'M', 'M', 'M',
+        'N', 'N', 'N',
+        'O', 'O', 'O', 'O', 'O', 'O', 'O',
+        'P', 'P',
+        'Q',
+        'R', 'R',
+        'S', 'S',
+        'T',
+        'U', 'U', 'U', 'U', 'U', 'U', 'U',
+        'V',
+        'W', 'W',
+        'X',
+        'Y', 'Y', 'Y',
+        'Z'
     };
 
     // Start is called before the first frame update
-    protected virtual void Start()
+    void Start()
     {
+        //TODO - should set target manually
         targetChar = GameObject.Find("Boss_3");
-        charObj = GameObject.Find("CharObj");
-        wordObject = GameObject.Find("Word");
-        tempChar = GameObject.Find("TempChar");
+        keyboardCG = GetComponent<CanvasGroup>();
+        birthCharScript = birthChar.GetComponent<BirthChar>();
+        //charObj = GameObject.Find("CharObj");
+        // wordObject = GameObject.Find("Word");
+        // tempChar = GameObject.Find("TempChar");
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        if (Input.GetButtonDown("Jump"))
-        {
-            SpawnChar();
-        }
-
-    }
-
-    //spawn char
-    void SpawnChar()
-    {
-        if (charNo < 16)
-        {
-            //spawn object under parent
-            //Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent)
-            Instantiate(charPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-            charNo += 1;
-            Debug.Log(charNo);
-
-        }
     }
 
     //make char shoot to target and pass letter
-    protected void CharToShoot(char letter)
+    public void CharToShoot(char letter)
     {
-        Debug.Log("letterClick = " + letter);
+        // Debug.Log("letterClick = " + letter);
         charObj.GetComponent<CharObj>().ShootWord(targetChar, letter);
     }
 
     //function after button click
-    protected void ButtonClick()
+    public void ButtonClick()
     {
-        charNo -= 1;
-        Debug.Log(charNo);
+        birthCharScript.MinusCharNoInKeyboard();
         keyboardCG.interactable = false;
     }
 
     //create random letter
-    protected char RandomLetter()
+    public char RandomLetter()
     {
         int randomNo = Random.Range(0, letters.Length);
         return letters[randomNo];
     }
-
-    // protected void DisableClick()
-    // {
-    //     keyboardCG.interactable = false;
-    // }
-
-    // //function after CharObj hit obj
-    // public void EnableClick()
-    // {
-    //     keyboardCG.interactable = true;
-    // }
 }

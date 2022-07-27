@@ -4,23 +4,17 @@ using UnityEngine;
 
 public class TempChar : MonoBehaviour
 {
-    public int noCharInWord = 0;
     //add char to word
-    public void AddToWord(char letter)
+    public void CharAddToWord(char letter)
     {
-        if (noCharInWord < 10)
-        {
-            Char charScript = gameObject.GetComponentInChildren<Char>();
-            charScript.CharAddToWord(letter);
-            noCharInWord += 1;
-            Debug.Log(noCharInWord);
-        }
+        Char charScript = gameObject.GetComponentInChildren<Char>();
+        charScript.AddToWord(letter);
     }
 
     //delete word if not collide with enemy
-    public void DeleteChar()
+    public void CharAddToBirth()
     {
         Char charScript = gameObject.GetComponentInChildren<Char>();
-        charScript.DestroyChar();
+        charScript.AddToBirthchar(false);
     }
 }

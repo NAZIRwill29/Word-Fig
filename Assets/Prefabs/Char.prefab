@@ -225,6 +225,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4243c6f4daa1f5408f61cd9f411cae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charPrefab: {fileID: 8961182319698499206}
-  letterClick: 0
-  letters: 4100420043004400450046004700480049004a004b004c004d004e004f0050005100520053005400550056005700580059005a00
+  letter: 0
+  keyboard: {fileID: 0}

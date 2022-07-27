@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Char : Keyboard
+public class Char : MonoBehaviour
 {
 
     private bool isClick;
-    private char letter;
+    public char letter;
+    public GameObject keyboard;
+    private Keyboard keyboardScript;
+    private Word wordScript;
     // Start is called before the first frame update
-    protected override void Start()
+    void Start()
     {
-        base.Start();
-        keyboardCG = GetComponentInParent<CanvasGroup>();
-        WriteLetter();
+        keyboardScript = keyboard.GetComponent<Keyboard>();
+        wordScript = keyboardScript.wordObject.GetComponent<Word>();
     }
 
     //action after button char click
@@ -21,54 +23,65 @@ public class Char : Keyboard
     {
         if (!isClick)
         {
-            ButtonClick();
-            CharToShoot(letter);
-            AddToTemp();
-            // Destroy(gameObject);
-            // AddToWord();
+            //function button in keyboard
+            if (wordScript.totalCharInWord < 8)
+            {
+                keyboardScript.ButtonClick();
+                keyboardScript.CharToShoot(letter);
+                AddToTemp();
+            }
         }
-        // else
-        // {
-        //     Destroy(gameObject);
-        // }
+        else
+        {
+            //function button in wordbox
+            AddToBirthchar(true);
+        }
     }
 
-    //TODO
-    //MAKE WORD- COMBINE letter, harm enemy
+    //add to keyboard
+    public void AddToKeyboard()
+    {
+        WriteLetter();
+        transform.SetParent(keyboard.transform, true);
+    }
 
     //add to temp
     private void AddToTemp()
     {
-        transform.SetParent(tempChar.transform, true);
+        transform.SetParent(keyboardScript.tempChar.transform, true);
     }
 
     //add to word
-    public void CharAddToWord(char letter)
+    public void AddToWord(char letter)
     {
         isClick = true;
-        Debug.Log("click");
         WriteLetter(letter);
-        transform.SetParent(wordObject.transform, true);
+        transform.SetParent(keyboardScript.wordObject.transform, true);
+        //for limit char in word
+        wordScript.IncreaseTotalCharInWord();
     }
 
-    //destroy char
-    public void DestroyChar()
+    //add to birthChar
+    public void AddToBirthchar(bool isParentWord)
     {
-        Destroy(gameObject);
+        transform.SetParent(keyboardScript.birthChar.transform, true);
+        //refresh isClick 
+        isClick = false;
+        if (isParentWord)
+            wordScript.DecreaseTotalCharInWord();
     }
 
     //write random letter
     public void WriteLetter()
     {
-        letter = RandomLetter();
-        Debug.Log("LetterChar = " + letter);
+        letter = keyboardScript.RandomLetter();
+        // Debug.Log("LetterChar = " + letter);
         gameObject.GetComponentInChildren<Text>().text = letter.ToString();
     }
     //write letter
     public void WriteLetter(char letter)
     {
-        Debug.Log("LetterCharWord = " + letter);
+        // Debug.Log("LetterCharWord = " + letter);
         gameObject.GetComponentInChildren<Text>().text = letter.ToString();
     }
-
 }

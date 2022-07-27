@@ -22,7 +22,7 @@ public class NPCTextPerson : Collidable
         {
             lastShout = Time.time;
             GameManager.instance.ShowText(message, 25, Color.white, transform.position + new Vector3(0, 0.36f, 0), Vector3.zero, 4.0f);
-            Debug.Log("talk");
+            // Debug.Log("talk");
             //make sound effect when attack
             collidableAudio.PlayOneShot(triggerSound, 1.0f);
         }
