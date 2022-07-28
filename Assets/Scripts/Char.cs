@@ -27,7 +27,9 @@ public class Char : MonoBehaviour
             if (wordScript.totalCharInWord < 8)
             {
                 keyboardScript.ButtonClick();
+                //shoot charObj
                 keyboardScript.CharToShoot(letter);
+                keyboardScript.charObj.GetComponent<CharObj>().charAnim.SetTrigger("show");
                 AddToTemp();
             }
         }
@@ -58,7 +60,7 @@ public class Char : MonoBehaviour
         WriteLetter(letter);
         transform.SetParent(keyboardScript.wordObject.transform, true);
         //for limit char in word
-        wordScript.IncreaseTotalCharInWord();
+        wordScript.ChangeTotalCharInWord(1);
     }
 
     //add to birthChar
@@ -68,7 +70,7 @@ public class Char : MonoBehaviour
         //refresh isClick 
         isClick = false;
         if (isParentWord)
-            wordScript.DecreaseTotalCharInWord();
+            wordScript.ChangeTotalCharInWord(-1);
     }
 
     //write random letter

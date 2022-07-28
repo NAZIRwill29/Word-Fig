@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class CharacterMenu : MonoBehaviour
 {
     //text field
-    public Text levelText, hitpointText, pesosText, upgradeCostText, xpText;
+    public Text levelText, hitpointText, manapointText, pesosText, buyText, xpText;
     //logic
     private int currentCharacterSelection = 0;
-    public Image characterSelectionSprite, weaponSprite;
+    private int currentItemSelection = 0;
+    public Image characterSelectionSprite, itemSelectionSprite;
     public RectTransform xpBar;
 
     //character selection
@@ -41,24 +41,49 @@ public class CharacterMenu : MonoBehaviour
         characterSelectionSprite.sprite = GameManager.instance.playerSprites[currentCharacterSelection];
         GameManager.instance.player.SwapSprite(currentCharacterSelection);
     }
-    //weapon upgrade 
-    public void OnUpgradeClick()
+
+    //item selection
+    public void OnArrowItemClick(bool right)
     {
-        if (GameManager.instance.TryUpgradeWeapon())
+        //if right button
+        if (right)
+        {
+            currentItemSelection++;
+            //if went too far
+            if (currentItemSelection == GameManager.instance.itemSprites.Count)
+                currentItemSelection = 0;
+            OnSelectionItemChange();
+        }
+        else
+        {
+            currentItemSelection--;
+            //if went too far
+            if (currentItemSelection < 0)
+                currentItemSelection = GameManager.instance.itemSprites.Count - 1;
+            OnSelectionItemChange();
+        }
+    }
+
+    //change item img
+    private void OnSelectionItemChange()
+    {
+        itemSelectionSprite.sprite = GameManager.instance.itemSprites[currentItemSelection];
+        buyText.text = GameManager.instance.itemPrices[currentItemSelection].ToString();
+    }
+
+    //buy item
+    public void BuyItem()
+    {
+        if (GameManager.instance.TryBuyPotion(currentItemSelection))
             UpdateMenu();
     }
-    //upgrade char info
+
+    //upgrade char info -call from menubutton
     public void UpdateMenu()
     {
-        //weapon
-        weaponSprite.sprite = GameManager.instance.weaponSprites[GameManager.instance.weapon.weaponLevel];
-        //check if max lvl
-        if (GameManager.instance.weapon.weaponLevel == GameManager.instance.weaponPrices.Count)
-            upgradeCostText.text = "MAX";
-        else
-            upgradeCostText.text = GameManager.instance.weaponPrices[GameManager.instance.weapon.weaponLevel].ToString();
         //meta
         hitpointText.text = GameManager.instance.player.hitpoint.ToString() + " / " + GameManager.instance.player.maxHitpoint.ToString();
+        manapointText.text = GameManager.instance.player.manapoint.ToString() + " / " + GameManager.instance.player.maxManapoint.ToString();
         pesosText.text = GameManager.instance.pesos.ToString();
         levelText.text = GameManager.instance.GetCurrentLevel().ToString();
         //xp Bar
@@ -78,13 +103,5 @@ public class CharacterMenu : MonoBehaviour
             xpBar.localScale = new Vector3(completionRatio, 1, 1);
             xpText.text = currXpIntoLevel.ToString() + " / " + diff;
         }
-    }
-
-    //Back to MainMenuScene
-    public void BackToMenu()
-    {
-        GameManager.instance.OnMainMenu();
-        GameManager.instance.SaveState();
-        SceneManager.LoadScene(0);
     }
 }

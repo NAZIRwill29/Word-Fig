@@ -14,6 +14,7 @@ public class CharObj : MonoBehaviour
     private float pushForce = 1;
     private AudioSource charObjAudio;
     public AudioClip triggerSound;
+    public Animator charAnim;
     // Start is called before the first frame update
     void Start()
     {
@@ -80,6 +81,7 @@ public class CharObj : MonoBehaviour
         charRb.velocity = Vector2.zero;
         //make to original posistion
         gameObject.transform.position = GameManager.instance.player.transform.position;
+        charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
     }
@@ -102,6 +104,7 @@ public class CharObj : MonoBehaviour
         charRb.velocity = Vector2.zero;
         //make to original posistion
         gameObject.transform.position = GameManager.instance.player.transform.position;
+        charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
     }

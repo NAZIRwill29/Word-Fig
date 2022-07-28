@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BirthChar : MonoBehaviour
 {
+    public Player player;
     private Char[] charKeyboards;
     private int totalCharInKeyboard = 0;
     private float cooldown = 0.3f;
@@ -23,6 +24,9 @@ public class BirthChar : MonoBehaviour
     // transfer char to keyboard
     public void CharToKeyboard()
     {
+        //if none mana
+        if (player.manapoint <= 0)
+            return;
         //check cooldown
         if (Time.time - lastSpawn > cooldown)
         {
@@ -36,7 +40,9 @@ public class BirthChar : MonoBehaviour
                 charKeyboards[0].AddToKeyboard();
                 totalCharInKeyboard += 1;
                 // Debug.Log(totalCharInKeyboard);
-
+                //decrease mana
+                player.ChangeMana(-1);
+                GameManager.instance.OnManapointChange();
             }
         }
 

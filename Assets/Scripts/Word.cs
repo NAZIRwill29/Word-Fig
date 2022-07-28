@@ -17,6 +17,7 @@ public class Word : MonoBehaviour
     private GameObject targetChar;
     private AudioSource wordAudio;
     public AudioClip triggerSound;
+    public Player player;
     void Awake()
     {
         //convert word in .txt to string word
@@ -41,7 +42,7 @@ public class Word : MonoBehaviour
         letterCombine = "";
         //get CHAR script from child
         charWords = GetComponentsInChildren<Char>();
-        Debug.Log(charWords.Length);
+        //Debug.Log(charWords.Length);
         for (int i = 0; i < charWords.Length; i++)
         {
             //get letter from char
@@ -68,6 +69,8 @@ public class Word : MonoBehaviour
             //send message to other to make call ReceiveDamage function
             targetChar.SendMessage("ReceiveDamage", dmg);
             wordAudio.PlayOneShot(triggerSound, 1.0f);
+            //increase mana and hp by refer on letter in word
+            player.Heal(charWords.Length);
         }
         //RefreshTotalCharInWord();
     }
@@ -80,17 +83,10 @@ public class Word : MonoBehaviour
         return words.Contains(word);
     }
 
-    //increase number of char in word - for limit
-    public void IncreaseTotalCharInWord()
+    //change number of char in word - for limit
+    public void ChangeTotalCharInWord(int number)
     {
-        totalCharInWord += 1;
-        // Debug.Log(totalCharInWord);
-    }
-
-    //decrease number of char in word - for limit
-    public void DecreaseTotalCharInWord()
-    {
-        totalCharInWord -= 1;
+        totalCharInWord += number;
         // Debug.Log(totalCharInWord);
     }
 

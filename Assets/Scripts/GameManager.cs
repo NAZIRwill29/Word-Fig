@@ -9,22 +9,25 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public List<Sprite> playerSprites;
-    public List<Sprite> weaponSprites;
-    public List<int> weaponPrices;
+    public List<Sprite> itemSprites;
+    public List<int> itemPrices;
     public List<int> xpTable;
     public Player player;
     public FloatingTextManager floatingTextManager;
-    public Weapon weapon;
+    // public Weapon weapon;
     //logic
     public int pesos;
     public int experience;
     public RectTransform hitpointBar;
+    public RectTransform manapointBar;
+    public Text hitpointText;
+    public Text manapointText;
     public GameObject canvas;
     public Animator deathMenuAnim;
     public Text infoLevelText;
-    public InputField userNameInput;
-    public Text userNameText;
-    public string userName;
+    // public InputField userNameInput;
+    // public Text userNameText;
+    // public string userName;
     // private string dataSave;
 
     //required for JsonUtility
@@ -32,10 +35,9 @@ public class GameManager : MonoBehaviour
     [System.Serializable]
     class SaveData
     {
-        public string userName;
+        // public string userName;
         public int pesos;
         public int experience;
-        public int weaponLevel;
     }
 
     private void Awake()
@@ -62,8 +64,8 @@ public class GameManager : MonoBehaviour
         canvas.SetActive(true);
         //fill in info
         infoLevelText.text = "Lv " + GetCurrentLevel().ToString();
-        userName = userNameInput.text;
-        userNameText.text = userName;
+        // userName = userNameInput.text;
+        // userNameText.text = userName;
     }
     //when on MainMenu scene turn off player and canvas
     public void OnMainMenu()
@@ -78,19 +80,48 @@ public class GameManager : MonoBehaviour
         floatingTextManager.Show(msg, fontSize, color, position, motion, duration);
     }
 
-    //upgrade weapon
-    public bool TryUpgradeWeapon()
+    //decision for try buy hp / mp potion
+    public bool TryBuyPotion(int itemSelection)
     {
-        //is weapon max lvl?
-        if (weaponPrices.Count <= weapon.weaponLevel)
-            return false;
-        if (pesos >= weaponPrices[weapon.weaponLevel])
+        //enough money
+        if (pesos >= itemPrices[itemSelection])
         {
-            pesos -= weaponPrices[weapon.weaponLevel];
-            weapon.UpgradeWeapon();
+            pesos -= itemPrices[itemSelection];
+            Debug.Log("buy item");
+            //check potion type
+            switch (itemSelection)
+            {
+                //small hp potion
+                case 0:
+                    player.Heal(10, true);
+                    break;
+                //small mp potion
+                case 1:
+                    player.Heal(10, false);
+                    break;
+                //small exp potion
+                case 2:
+                    GrantXp(10);
+                    break;
+                //big hp potion
+                case 3:
+                    player.Heal(40, true);
+                    break;
+                //big mp potion
+                case 4:
+                    player.Heal(40, false);
+                    break;
+                //big exp potion
+                case 5:
+                    GrantXp(40);
+                    break;
+                default:
+                    break;
+            }
+
             return true;
         }
-        //if not max lvl and enough pesos
+
         return false;
     }
 
@@ -128,8 +159,9 @@ public class GameManager : MonoBehaviour
     public void OnLevelUp()
     {
         player.OnLevelUp();
-        //for raise hp after level up 
+        //for raise hp mp after level up 
         OnHitpointChange();
+        OnManapointChange();
         //set leveltext at info
         infoLevelText.text = "Lv " + GetCurrentLevel().ToString();
     }
@@ -138,6 +170,14 @@ public class GameManager : MonoBehaviour
     {
         float ratio = (float)player.hitpoint / (float)player.maxHitpoint;
         hitpointBar.localScale = new Vector3(ratio, 1, 1);
+        hitpointText.text = player.hitpoint.ToString() + " / " + player.maxHitpoint.ToString();
+    }
+    //mana bar
+    public void OnManapointChange()
+    {
+        float ratio = (float)player.manapoint / (float)player.maxManapoint;
+        manapointBar.localScale = new Vector3(ratio, 1, 1);
+        manapointText.text = player.manapoint.ToString() + " / " + player.maxManapoint.ToString();
     }
     //death menu and respawn
     public void Respawn()
@@ -163,10 +203,9 @@ public class GameManager : MonoBehaviour
 
         //save variable
         SaveData data = new SaveData();
-        data.userName = userName;
+        // data.userName = userName;
         data.pesos = pesos;
         data.experience = experience;
-        data.weaponLevel = weapon.weaponLevel;
         //transform instance to json
         string json = JsonUtility.ToJson(data);
         //method to write string to a file
@@ -180,8 +219,7 @@ public class GameManager : MonoBehaviour
     {
         pesos = 0;
         experience = 0;
-        weapon.weaponLevel = 0;
-        userName = "";
+        // userName = "";
         SaveState();
         Debug.Log("Resetsave");
         SceneManager.sceneLoaded += LoadState;
@@ -203,15 +241,16 @@ public class GameManager : MonoBehaviour
             SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
             //set gameData refer SaveData
             //change player info
-            userName = dataLoad.userName;
+            // userName = dataLoad.userName;
             //Debug.Log(userName);
             pesos = dataLoad.pesos;
             experience = dataLoad.experience;
-            weapon.weaponLevel = dataLoad.weaponLevel;
             //set level of player
             if (GetCurrentLevel() != 1)
                 player.SetLevel(GetCurrentLevel());
             player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+            OnHitpointChange();
+            OnManapointChange();
             //make call only once only
             SceneManager.sceneLoaded -= LoadState;
         }
@@ -238,5 +277,15 @@ public class GameManager : MonoBehaviour
     {
         //set spawn point
         player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+        OnHitpointChange();
+        OnManapointChange();
+    }
+
+    //Back to MainMenuScene
+    public void BackToMenu()
+    {
+        OnMainMenu();
+        SaveState();
+        SceneManager.LoadScene(0);
     }
 }
