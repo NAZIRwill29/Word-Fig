@@ -47,7 +47,7 @@ public class Keyboard : MonoBehaviour
     void Start()
     {
         //TODO - should set target manually
-        targetChar = GameObject.Find("Boss_3");
+        //targetChar = GameObject.Find("Boss_3");
         keyboardCG = GetComponent<CanvasGroup>();
         birthCharScript = birthChar.GetComponent<BirthChar>();
         //charObj = GameObject.Find("CharObj");

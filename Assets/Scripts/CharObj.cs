@@ -10,11 +10,12 @@ public class CharObj : MonoBehaviour
     public GameObject keyboard;
     private GameObject tempChar;
     public char letter;
-    private int damage = 1;
+    private int damage;
     private float pushForce = 1;
     private AudioSource charObjAudio;
     public AudioClip triggerSound;
     public Animator charAnim;
+    private bool isWordCombine;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,18 @@ public class CharObj : MonoBehaviour
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
     }
 
+    //shoot combine word
+    public void ShootWord(GameObject targetChar, int damageWord)
+    {
+        //turn on SpriteRendere
+        charSR.enabled = true;
+        isWordCombine = true;
+        // Debug.Log(isWordCombine);
+        damage = damageWord;
+        charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
+        charObjAudio.PlayOneShot(triggerSound, 1.0f);
+    }
+
     //method trigger when collide
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -49,15 +62,31 @@ public class CharObj : MonoBehaviour
         {
             if (other.name != "Player")
             {
-                AfterCollide(other);
-                //move char to word
-                tempChar.GetComponent<TempChar>().CharAddToWord(letter);
+                if (isWordCombine)
+                {
+                    // Debug.Log("wordcombine");
+                    AfterCollide(other, damage);
+                }
+                else
+                {
+                    AfterCollide(other, 1);
+                    //move char to word
+                    tempChar.GetComponent<TempChar>().CharAddToWord(letter);
+                }
             }
         }
         else if (other.tag == "Destructable")
         {
-            AfterCollide(other);
-            tempChar.GetComponent<TempChar>().CharAddToBirth();
+            if (isWordCombine)
+            {
+                AfterCollide(other, damage);
+            }
+            else
+            {
+                AfterCollide(other, 1);
+                tempChar.GetComponent<TempChar>().CharAddToBirth();
+            }
+
         }
         else if (other.tag == "Weapon")
         {
@@ -84,10 +113,13 @@ public class CharObj : MonoBehaviour
         charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
+        if (isWordCombine)
+            isWordCombine = false;
     }
     //after collide with damage
-    private void AfterCollide(Collider2D other)
+    private void AfterCollide(Collider2D other, int damage)
     {
+        // Debug.Log(damage);
         //Create new dmg obj b4 send to enemy
         Damage dmg = new Damage
         {
@@ -107,5 +139,7 @@ public class CharObj : MonoBehaviour
         charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
+        if (isWordCombine)
+            isWordCombine = false;
     }
 }

@@ -11,13 +11,13 @@ public class Word : MonoBehaviour
     private TextAsset wordList;
     private List<string> words;
     public int totalCharInWord;
-    private int damage = 1;
-    private float pushForce = 2;
     public Keyboard keyboard;
     private GameObject targetChar;
     private AudioSource wordAudio;
     public AudioClip triggerSound;
     public Player player;
+    public CharObj charObj;
+    private int damage;
     void Awake()
     {
         //convert word in .txt to string word
@@ -59,15 +59,9 @@ public class Word : MonoBehaviour
             damage = charWords.Length;
             //get target enemy from keyboard
             targetChar = keyboard.targetChar;
-            //Create new dmg obj b4 send to enemy
-            Damage dmg = new Damage
-            {
-                damageAmount = damage,
-                origin = transform.position,
-                pushForce = pushForce
-            };
-            //send message to other to make call ReceiveDamage function
-            targetChar.SendMessage("ReceiveDamage", dmg);
+            //shoot word
+            charObj.charAnim.SetTrigger("show");
+            charObj.ShootWord(targetChar, damage);
             wordAudio.PlayOneShot(triggerSound, 1.0f);
             //increase mana and hp by refer on letter in word
             player.Heal(charWords.Length);

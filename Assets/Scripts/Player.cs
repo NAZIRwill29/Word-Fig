@@ -5,12 +5,14 @@ using UnityEngine;
 public class Player : Mover
 {
     private SpriteRenderer spriteRenderer;
+    public GameObject targetObj;
     private bool isAlive = true;
     public AudioClip healSound;
     public int manapoint = 20;
     public int maxManapoint = 20;
     private float lastIncreaseMana;
     private float cooldown = 5;
+    public Joystick joystick;
     protected override void Start()
     {
         base.Start();
@@ -37,12 +39,15 @@ public class Player : Mover
     void FixedUpdate()
     {
         //get input from user for move player
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        // float x = Input.GetAxisRaw("Horizontal");
+        // float y = Input.GetAxisRaw("Vertical");
+
+        float x = joystick.Horizontal;
+        float y = joystick.Vertical;
 
         if (isAlive)
             //call update motor in mover
-            UpdateMotor(new Vector3(x, y, 0));
+            UpdateMotor(new Vector3(x, y, 0), targetObj);
     }
     //swap character
     public void SwapSprite(int skinId)
