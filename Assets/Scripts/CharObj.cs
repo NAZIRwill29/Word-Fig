@@ -11,11 +11,14 @@ public class CharObj : MonoBehaviour
     private GameObject tempChar;
     public char letter;
     private int damage;
+    private int damageCombine;
     private float pushForce = 1;
     private AudioSource charObjAudio;
     public AudioClip triggerSound;
     public Animator charAnim;
     private bool isWordCombine;
+    public Sprite[] charSprites;
+    private
     // Start is called before the first frame update
     void Start()
     {
@@ -31,14 +34,22 @@ public class CharObj : MonoBehaviour
 
     }
 
+    //increase damage after level up
+    public void SetDamage(int dmg)
+    {
+        damage = dmg;
+        Debug.Log("damage = " + damage);
+    }
+
     //shoot word
-    public void ShootWord(GameObject targetChar, char letterClick)
+    public void ShootWord(GameObject targetChar, char letterClick, string specialText)
     {
         //get letter from char
         letter = letterClick;
         // Debug.Log("LetterCharObj = " + letter);
         //turn on SpriteRendere
         charSR.enabled = true;
+        SetSprite(specialText);
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
     }
@@ -50,7 +61,8 @@ public class CharObj : MonoBehaviour
         charSR.enabled = true;
         isWordCombine = true;
         // Debug.Log(isWordCombine);
-        damage = damageWord;
+        damageCombine = damageWord;
+        Debug.Log("damage = " + damageCombine);
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
     }
@@ -65,11 +77,11 @@ public class CharObj : MonoBehaviour
                 if (isWordCombine)
                 {
                     // Debug.Log("wordcombine");
-                    AfterCollide(other, damage);
+                    AfterCollide(other, damageCombine);
                 }
                 else
                 {
-                    AfterCollide(other, 1);
+                    AfterCollide(other, damage);
                     //move char to word
                     tempChar.GetComponent<TempChar>().CharAddToWord(letter);
                 }
@@ -79,11 +91,11 @@ public class CharObj : MonoBehaviour
         {
             if (isWordCombine)
             {
-                AfterCollide(other, damage);
+                AfterCollide(other, damageCombine);
             }
             else
             {
-                AfterCollide(other, 1);
+                AfterCollide(other, damage);
                 tempChar.GetComponent<TempChar>().CharAddToBirth();
             }
 
@@ -113,6 +125,7 @@ public class CharObj : MonoBehaviour
         charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
+        keyboard.GetComponent<CanvasGroup>().alpha = 1;
         if (isWordCombine)
             isWordCombine = false;
     }
@@ -139,7 +152,31 @@ public class CharObj : MonoBehaviour
         charAnim.SetTrigger("hide");
         //enable keyboard interaction
         keyboard.GetComponent<CanvasGroup>().interactable = true;
+        keyboard.GetComponent<CanvasGroup>().alpha = 1;
         if (isWordCombine)
             isWordCombine = false;
+    }
+
+    //set sprite - when attack
+    public void SetSprite(string text)
+    {
+        switch (text)
+        {
+            case "thunder":
+                charSR.sprite = charSprites[1];
+                break;
+            case "ice":
+                charSR.sprite = charSprites[2];
+                break;
+            case "fire":
+                charSR.sprite = charSprites[3];
+                break;
+            case "wind":
+                charSR.sprite = charSprites[4];
+                break;
+            default:
+                charSR.sprite = charSprites[0];
+                break;
+        }
     }
 }

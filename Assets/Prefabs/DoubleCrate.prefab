@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 2098779892870851740}
   m_Layer: 6
   m_Name: DoubleCrate
-  m_TagString: Fighter
+  m_TagString: Destructable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

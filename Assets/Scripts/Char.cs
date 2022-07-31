@@ -9,13 +9,18 @@ public class Char : MonoBehaviour
     private bool isClick;
     public char letter;
     public GameObject keyboard;
+    [SerializeField]
+    public GameObject image;
+    private Image imageImg;
     private Keyboard keyboardScript;
     private Word wordScript;
+    private string special;
     // Start is called before the first frame update
     void Start()
     {
         keyboardScript = keyboard.GetComponent<Keyboard>();
         wordScript = keyboardScript.wordObject.GetComponent<Word>();
+        imageImg = GetComponent<Image>();
     }
 
     //action after button char click
@@ -28,7 +33,7 @@ public class Char : MonoBehaviour
             {
                 keyboardScript.ButtonClick();
                 //shoot charObj
-                keyboardScript.CharToShoot(letter);
+                keyboardScript.CharToShoot(letter, special);
                 keyboardScript.charObj.GetComponent<CharObj>().charAnim.SetTrigger("show");
                 AddToTemp();
             }
@@ -59,6 +64,8 @@ public class Char : MonoBehaviour
         isClick = true;
         WriteLetter(letter);
         transform.SetParent(keyboardScript.wordObject.transform, true);
+        //turn off special char image
+        image.SetActive(false);
         //for limit char in word
         wordScript.ChangeTotalCharInWord(1);
     }
@@ -67,6 +74,8 @@ public class Char : MonoBehaviour
     public void AddToBirthchar(bool isParentWord)
     {
         transform.SetParent(keyboardScript.birthChar.transform, true);
+        //turn on special char image
+        image.SetActive(true);
         //refresh isClick 
         isClick = false;
         if (isParentWord)
@@ -85,5 +94,34 @@ public class Char : MonoBehaviour
     {
         // Debug.Log("LetterCharWord = " + letter);
         gameObject.GetComponentInChildren<Text>().text = letter.ToString();
+    }
+
+    //set special char
+    public void SetSpecialChar(string text)
+    {
+        ChangeSpecialCharImage(text);
+        special = text;
+    }
+
+    //change source image for specialChar - only when level up
+    public void ChangeSpecialCharImage(string text)
+    {
+        switch (text)
+        {
+            case "thunder":
+                imageImg.sprite = keyboardScript.specialCharSprites[0];
+                break;
+            case "ice":
+                imageImg.sprite = keyboardScript.specialCharSprites[1];
+                break;
+            case "fire":
+                imageImg.sprite = keyboardScript.specialCharSprites[2];
+                break;
+            case "wind":
+                imageImg.sprite = keyboardScript.specialCharSprites[3];
+                break;
+            default:
+                break;
+        }
     }
 }

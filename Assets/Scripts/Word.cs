@@ -34,6 +34,13 @@ public class Word : MonoBehaviour
 
     }
 
+    //increase damage after level up
+    public void SetDamage(int dmg)
+    {
+        damage = dmg;
+        charObj.SetDamage(dmg);
+    }
+
     //convert char to word for damage enemy
     public void WordAttack()
     {
@@ -56,7 +63,7 @@ public class Word : MonoBehaviour
         if (CheckWordExist(letterCombine))
         {
             //calculate damage based on letter in word
-            damage = charWords.Length;
+            damage *= charWords.Length;
             //get target enemy from keyboard
             targetChar = keyboard.targetChar;
             //shoot word
@@ -64,7 +71,7 @@ public class Word : MonoBehaviour
             charObj.ShootWord(targetChar, damage);
             wordAudio.PlayOneShot(triggerSound, 1.0f);
             //increase mana and hp by refer on letter in word
-            player.Heal(charWords.Length);
+            player.Heal(damage);
         }
         //RefreshTotalCharInWord();
     }

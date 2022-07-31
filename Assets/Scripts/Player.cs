@@ -10,9 +10,12 @@ public class Player : Mover
     public AudioClip healSound;
     public int manapoint = 20;
     public int maxManapoint = 20;
+    public int damage = 1;
     private float lastIncreaseMana;
     private float cooldown = 5;
     public Joystick joystick;
+    public Word wordScript;
+    public Keyboard keyboardScript;
     protected override void Start()
     {
         base.Start();
@@ -55,9 +58,14 @@ public class Player : Mover
         spriteRenderer.sprite = GameManager.instance.playerSprites[skinId];
     }
     //when lvl up
-    public void OnLevelUp()
+    public void OnLevelUp(int level)
     {
         int increasePoint = (int)(2 * (maxHitpoint / 10));
+        //increase damage
+        damage += 1;
+        SetDamage(damage);
+        //set special char
+        keyboardScript.SetSpecialChar(level);
         //increase hp
         maxHitpoint += increasePoint;
         hitpoint = maxHitpoint;
@@ -68,7 +76,13 @@ public class Player : Mover
     public void SetLevel(int level)
     {
         for (int i = 0; i < level; i++)
-            OnLevelUp();
+            OnLevelUp(level);
+    }
+
+    //set damage
+    public void SetDamage(int dmg)
+    {
+        wordScript.SetDamage(damage);
     }
     //heal hp mp player
     public void Heal(int healingAmount)

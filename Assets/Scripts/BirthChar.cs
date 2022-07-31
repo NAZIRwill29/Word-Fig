@@ -21,7 +21,7 @@ public class BirthChar : MonoBehaviour
 
     }
 
-    // transfer char to keyboard
+    // transfer char to keyboard - button A
     public void CharToKeyboard()
     {
         //if none mana
@@ -52,5 +52,20 @@ public class BirthChar : MonoBehaviour
     {
         totalCharInKeyboard -= 1;
         // Debug.Log(totalCharInKeyboard);
+    }
+
+    //set special char
+    //level - 3 - thunder -> 7 - ice -> 10 - fire -> 15 - wind
+    public void SetSpecialChar(int level)
+    {
+        charKeyboards = GetComponentsInChildren<Char>();
+        if (level >= 3)
+            charKeyboards[0].SetSpecialChar("thunder");
+        else if (level >= 7)
+            charKeyboards[2].SetSpecialChar("ice");
+        else if (level >= 10)
+            charKeyboards[4].SetSpecialChar("fire");
+        else if (level >= 15)
+            charKeyboards[6].SetSpecialChar("wind");
     }
 }

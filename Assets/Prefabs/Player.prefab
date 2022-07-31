@@ -434,7 +434,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8112459566250669304
 Transform:
   m_ObjectHideFlags: 0
@@ -550,7 +550,10 @@ MonoBehaviour:
   healSound: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
   manapoint: 20
   maxManapoint: 20
+  damage: 1
   joystick: {fileID: 0}
+  wordScript: {fileID: 0}
+  keyboardScript: {fileID: 0}
 --- !u!114 &5768145271132913729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,6 +717,30 @@ PrefabInstance:
       propertyPath: charAnim
       value: 
       objectReference: {fileID: 2103970490}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: -1361928931727379795, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 7019857753771223099, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: -8167126452187029819, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 7833055168305552414, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+    - target: {fileID: 3537764137667951330, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
+      propertyPath: charSprites.Array.data[4]
+      value: 
+      objectReference: {fileID: 2603361281007707339, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
     - target: {fileID: 3537764137667951333, guid: 8027fff69b52cfd40b303f4b157f0da9, type: 3}
       propertyPath: m_Name
       value: CharObj

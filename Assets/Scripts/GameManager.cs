@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject canvas;
     public Animator deathMenuAnim;
     public Text infoLevelText;
+    public Keyboard keyboardScript;
     // public InputField userNameInput;
     // public Text userNameText;
     // public string userName;
@@ -62,8 +63,6 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += LoadState;
         player.gameObject.SetActive(true);
         canvas.SetActive(true);
-        //fill in info
-        infoLevelText.text = "Lv " + GetCurrentLevel().ToString();
         // userName = userNameInput.text;
         // userNameText.text = userName;
     }
@@ -135,6 +134,8 @@ public class GameManager : MonoBehaviour
             add += xpTable[r];
             r++;
         }
+        //fill in info
+        infoLevelText.text = "Lv " + r;
         return r;
     }
     public int GetXpToLevel(int level)
@@ -153,12 +154,12 @@ public class GameManager : MonoBehaviour
         int currLevel = GetCurrentLevel();
         experience += xp;
         if (currLevel < GetCurrentLevel())
-            OnLevelUp();
+            OnLevelUp(currLevel);
     }
     //when lvl up
-    public void OnLevelUp()
+    public void OnLevelUp(int level)
     {
-        player.OnLevelUp();
+        player.OnLevelUp(level);
         //for raise hp mp after level up 
         OnHitpointChange();
         OnManapointChange();
@@ -251,6 +252,7 @@ public class GameManager : MonoBehaviour
             player.transform.position = GameObject.Find("SpawnPoint").transform.position;
             OnHitpointChange();
             OnManapointChange();
+            player.SetDamage(GetCurrentLevel());
             //make call only once only
             SceneManager.sceneLoaded -= LoadState;
         }

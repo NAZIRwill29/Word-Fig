@@ -13,6 +13,7 @@ public class Keyboard : MonoBehaviour
     public char letterClick;
     public GameObject birthChar;
     private BirthChar birthCharScript;
+    public Sprite[] specialCharSprites;
     private char[] letters = new char[]
     {
         'A', 'A', 'A', 'A', 'A', 'A', 'A',
@@ -46,8 +47,6 @@ public class Keyboard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //TODO - should set target manually
-        //targetChar = GameObject.Find("Boss_3");
         keyboardCG = GetComponent<CanvasGroup>();
         birthCharScript = birthChar.GetComponent<BirthChar>();
         //charObj = GameObject.Find("CharObj");
@@ -61,17 +60,18 @@ public class Keyboard : MonoBehaviour
     }
 
     //make char shoot to target and pass letter
-    public void CharToShoot(char letter)
+    public void CharToShoot(char letter, string specialText)
     {
         // Debug.Log("letterClick = " + letter);
-        charObj.GetComponent<CharObj>().ShootWord(targetChar, letter);
+        charObj.GetComponent<CharObj>().ShootWord(targetChar, letter, specialText);
     }
 
     //function after button click
     public void ButtonClick()
     {
-        birthCharScript.MinusCharNoInKeyboard();
         keyboardCG.interactable = false;
+        keyboardCG.alpha = 0.7f;
+        birthCharScript.MinusCharNoInKeyboard();
     }
 
     //create random letter
@@ -79,5 +79,11 @@ public class Keyboard : MonoBehaviour
     {
         int randomNo = Random.Range(0, letters.Length);
         return letters[randomNo];
+    }
+
+    //set special char
+    public void SetSpecialChar(int level)
+    {
+        birthCharScript.SetSpecialChar(level);
     }
 }
