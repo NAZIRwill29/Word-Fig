@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CharacterMenu : MonoBehaviour
 {
     //text field
-    public Text levelText, hitpointText, manapointText, pesosText, buyText, xpText;
+    public Text levelText, hitpointText, manapointText, pesosText, buyText, xpText, itemText;
     //logic
     private int currentCharacterSelection = 0;
     private int currentItemSelection = 0;
@@ -64,11 +64,12 @@ public class CharacterMenu : MonoBehaviour
         }
     }
 
-    //change item img
+    //change item img and text when select
     private void OnSelectionItemChange()
     {
         itemSelectionSprite.sprite = GameManager.instance.itemSprites[currentItemSelection];
         buyText.text = GameManager.instance.itemPrices[currentItemSelection].ToString();
+        itemText.text = GameManager.instance.itemNames[currentItemSelection].ToString();
     }
 
     //buy item

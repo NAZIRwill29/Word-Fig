@@ -11,11 +11,15 @@ public class Player : Mover
     public int manapoint = 20;
     public int maxManapoint = 20;
     public int damage = 1;
+    public int levelPlayer = 1;
     private float lastIncreaseMana;
     private float cooldown = 5;
     public Joystick joystick;
     public Word wordScript;
     public Keyboard keyboardScript;
+    private Char[] charSpecialChars;
+    public GameObject specialChar;
+    private int specialCharNo;
     protected override void Start()
     {
         base.Start();
@@ -58,32 +62,98 @@ public class Player : Mover
         spriteRenderer.sprite = GameManager.instance.playerSprites[skinId];
     }
     //when lvl up
-    public void OnLevelUp(int level)
+    public void OnLevelUp()
     {
-        int increasePoint = (int)(2 * (maxHitpoint / 10));
-        //increase damage
-        damage += 1;
+        damage = levelPlayer;
         SetDamage(damage);
         //set special char
-        keyboardScript.SetSpecialChar(level);
-        //increase hp
-        maxHitpoint += increasePoint;
+        SetSpecialChar();
+        //increase hp mp
+        int increasePoint = 20;
+        for (int i = 0; i < levelPlayer; i++)
+        {
+            if (levelPlayer >= 5)
+                increasePoint += i * 5;
+            else if (levelPlayer >= 10)
+                increasePoint += i * 9;
+            else if (levelPlayer >= 15)
+                increasePoint += i * 13;
+            else //for lvl < 5
+                increasePoint += i * 3;
+            //increase hp
+            maxHitpoint = increasePoint;
+            //increase mp
+            maxManapoint = increasePoint;
+        }
         hitpoint = maxHitpoint;
-        //increase mp
-        maxManapoint += increasePoint;
         manapoint = maxManapoint;
+    }
+    //TODO - SHOP show name of potion
+    public void SetLevelPlayer(int level)
+    {
+        levelPlayer = level;
     }
     public void SetLevel(int level)
     {
         for (int i = 0; i < level; i++)
-            OnLevelUp(level);
+            OnLevelUp();
     }
 
     //set damage
     public void SetDamage(int dmg)
     {
-        wordScript.SetDamage(damage);
+        wordScript.SetDamage(dmg);
     }
+    public void SetDamagePlayer(int dmg)
+    {
+        damage = dmg;
+    }
+
+    //set special char in specialChar container
+    //level - 3 - thunder -> 7 - ice -> 10 - fire -> 15 - wind
+    public void SetSpecialChar()
+    {
+        charSpecialChars = specialChar.GetComponentsInChildren<Char>();
+        if (levelPlayer == 3)
+        {
+            //limit special char
+            if (specialCharNo >= 1)
+                return;
+            charSpecialChars[0].SetSpecialChar("thunder");
+            charSpecialChars[0].AddToBirthchar(false);
+            specialCharNo++;
+            Debug.Log("thunder");
+        }
+        else if (levelPlayer == 7)
+        {
+            if (specialCharNo >= 2)
+                return;
+            charSpecialChars[1].SetSpecialChar("ice");
+            charSpecialChars[1].AddToBirthchar(false);
+            specialCharNo++;
+            Debug.Log("ice");
+        }
+        else if (levelPlayer == 10)
+        {
+            if (specialCharNo >= 3)
+                return;
+            charSpecialChars[2].SetSpecialChar("fire");
+            charSpecialChars[2].AddToBirthchar(false);
+            specialCharNo++;
+            Debug.Log("fire");
+        }
+        else if (levelPlayer == 15)
+        {
+            if (specialCharNo >= 4)
+                return;
+            charSpecialChars[3].SetSpecialChar("wind");
+            charSpecialChars[3].AddToBirthchar(false);
+            specialCharNo++;
+            Debug.Log("wind");
+        }
+
+    }
+
     //heal hp mp player
     public void Heal(int healingAmount)
     {

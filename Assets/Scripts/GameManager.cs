@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public List<Sprite> playerSprites;
     public List<Sprite> itemSprites;
     public List<int> itemPrices;
+    public List<string> itemNames;
     public List<int> xpTable;
     public Player player;
     public FloatingTextManager floatingTextManager;
@@ -39,6 +40,8 @@ public class GameManager : MonoBehaviour
         // public string userName;
         public int pesos;
         public int experience;
+        public int level;
+        public int damage;
     }
 
     private void Awake()
@@ -136,6 +139,8 @@ public class GameManager : MonoBehaviour
         }
         //fill in info
         infoLevelText.text = "Lv " + r;
+        //set leyer player
+        player.SetLevelPlayer(r);
         return r;
     }
     public int GetXpToLevel(int level)
@@ -154,12 +159,12 @@ public class GameManager : MonoBehaviour
         int currLevel = GetCurrentLevel();
         experience += xp;
         if (currLevel < GetCurrentLevel())
-            OnLevelUp(currLevel);
+            OnLevelUp();
     }
     //when lvl up
-    public void OnLevelUp(int level)
+    public void OnLevelUp()
     {
-        player.OnLevelUp(level);
+        player.OnLevelUp();
         //for raise hp mp after level up 
         OnHitpointChange();
         OnManapointChange();
@@ -207,6 +212,8 @@ public class GameManager : MonoBehaviour
         // data.userName = userName;
         data.pesos = pesos;
         data.experience = experience;
+        data.level = player.levelPlayer;
+        data.damage = player.damage;
         //transform instance to json
         string json = JsonUtility.ToJson(data);
         //method to write string to a file
@@ -220,6 +227,8 @@ public class GameManager : MonoBehaviour
     {
         pesos = 0;
         experience = 0;
+        player.SetLevel(1);
+        player.SetDamagePlayer(1);
         // userName = "";
         SaveState();
         Debug.Log("Resetsave");
@@ -246,6 +255,8 @@ public class GameManager : MonoBehaviour
             //Debug.Log(userName);
             pesos = dataLoad.pesos;
             experience = dataLoad.experience;
+            player.SetLevel(dataLoad.level);
+            player.SetDamagePlayer(dataLoad.damage);
             //set level of player
             if (GetCurrentLevel() != 1)
                 player.SetLevel(GetCurrentLevel());

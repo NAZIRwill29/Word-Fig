@@ -76,8 +76,6 @@ public class Word : MonoBehaviour
         //RefreshTotalCharInWord();
     }
 
-    //TODO - set new menu and interface
-
     //check if word exist
     private bool CheckWordExist(string word)
     {

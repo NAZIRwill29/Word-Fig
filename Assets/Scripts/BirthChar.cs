@@ -5,7 +5,7 @@ using UnityEngine;
 public class BirthChar : MonoBehaviour
 {
     public Player player;
-    private Char[] charKeyboards;
+    private Char[] chars;
     private int totalCharInKeyboard = 0;
     private float cooldown = 0.3f;
     private float lastSpawn;
@@ -33,11 +33,11 @@ public class BirthChar : MonoBehaviour
             lastSpawn = Time.time;
             if (totalCharInKeyboard < 16)
             {
-                charKeyboards = GetComponentsInChildren<Char>();
+                chars = GetComponentsInChildren<Char>();
                 //spawn object under parent
                 //Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent)
                 //Instantiate(charPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-                charKeyboards[0].AddToKeyboard();
+                chars[Random.Range(0, chars.Length)].AddToKeyboard();
                 totalCharInKeyboard += 1;
                 // Debug.Log(totalCharInKeyboard);
                 //decrease mana
@@ -52,20 +52,5 @@ public class BirthChar : MonoBehaviour
     {
         totalCharInKeyboard -= 1;
         // Debug.Log(totalCharInKeyboard);
-    }
-
-    //set special char
-    //level - 3 - thunder -> 7 - ice -> 10 - fire -> 15 - wind
-    public void SetSpecialChar(int level)
-    {
-        charKeyboards = GetComponentsInChildren<Char>();
-        if (level >= 3)
-            charKeyboards[0].SetSpecialChar("thunder");
-        else if (level >= 7)
-            charKeyboards[2].SetSpecialChar("ice");
-        else if (level >= 10)
-            charKeyboards[4].SetSpecialChar("fire");
-        else if (level >= 15)
-            charKeyboards[6].SetSpecialChar("wind");
     }
 }

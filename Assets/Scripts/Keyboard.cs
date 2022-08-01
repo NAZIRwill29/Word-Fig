@@ -80,10 +80,4 @@ public class Keyboard : MonoBehaviour
         int randomNo = Random.Range(0, letters.Length);
         return letters[randomNo];
     }
-
-    //set special char
-    public void SetSpecialChar(int level)
-    {
-        birthCharScript.SetSpecialChar(level);
-    }
 }

@@ -14,13 +14,14 @@ public class Char : MonoBehaviour
     private Image imageImg;
     private Keyboard keyboardScript;
     private Word wordScript;
+    [SerializeField]
     private string special;
     // Start is called before the first frame update
     void Start()
     {
         keyboardScript = keyboard.GetComponent<Keyboard>();
         wordScript = keyboardScript.wordObject.GetComponent<Word>();
-        imageImg = GetComponent<Image>();
+        imageImg = image.GetComponent<Image>();
     }
 
     //action after button char click
@@ -99,8 +100,8 @@ public class Char : MonoBehaviour
     //set special char
     public void SetSpecialChar(string text)
     {
-        ChangeSpecialCharImage(text);
         special = text;
+        ChangeSpecialCharImage(text);
     }
 
     //change source image for specialChar - only when level up
