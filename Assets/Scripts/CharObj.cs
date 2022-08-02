@@ -12,7 +12,8 @@ public class CharObj : MonoBehaviour
     public char letter;
     private int damage;
     private int damageCombine;
-    private float pushForce = 1;
+    [SerializeField]
+    private float pushForce = 3;
     private AudioSource charObjAudio;
     public AudioClip triggerSound;
     public Animator charAnim;
@@ -65,6 +66,15 @@ public class CharObj : MonoBehaviour
         Debug.Log("damage = " + damageCombine);
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
+        StartCoroutine("StopCharObj");
+    }
+
+    //stop charObj movement
+    private IEnumerator StopCharObj()
+    {
+        yield return new WaitForSeconds(7);
+        AfterCollide();
+        tempChar.GetComponent<TempChar>().CharAddToBirth();
     }
 
     //method trigger when collide
@@ -102,7 +112,9 @@ public class CharObj : MonoBehaviour
         }
         else if (other.tag == "Weapon")
         {
-            return;
+            Debug.Log("Weapon");
+            AfterCollide();
+            tempChar.GetComponent<TempChar>().CharAddToBirth();
         }
         else
         {

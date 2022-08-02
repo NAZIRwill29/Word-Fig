@@ -239,34 +239,43 @@ public class GameManager : MonoBehaviour
     //load game
     public void LoadState(Scene s, LoadSceneMode mode)
     {
-        //get path of saved data
-        string path = Application.persistentDataPath + "/savefile.json";
-        //check if exist
-        if (File.Exists(path))
+        try
         {
-            Debug.Log("Load state");
-            //read content
-            string json = File.ReadAllText(path);
-            //transform into SaveData instance
-            SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
-            //set gameData refer SaveData
-            //change player info
-            // userName = dataLoad.userName;
-            //Debug.Log(userName);
-            pesos = dataLoad.pesos;
-            experience = dataLoad.experience;
-            player.SetLevel(dataLoad.level);
-            player.SetDamagePlayer(dataLoad.damage);
-            //set level of player
-            if (GetCurrentLevel() != 1)
-                player.SetLevel(GetCurrentLevel());
-            player.transform.position = GameObject.Find("SpawnPoint").transform.position;
-            OnHitpointChange();
-            OnManapointChange();
-            player.SetDamage(GetCurrentLevel());
-            //make call only once only
-            SceneManager.sceneLoaded -= LoadState;
+            //get path of saved data
+            string path = Application.persistentDataPath + "/savefile.json";
+            //check if exist
+            if (File.Exists(path))
+            {
+                Debug.Log("Load state");
+                //read content
+                string json = File.ReadAllText(path);
+                //transform into SaveData instance
+                SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
+                //set gameData refer SaveData
+                //change player info
+                // userName = dataLoad.userName;
+                //Debug.Log(userName);
+                pesos = dataLoad.pesos;
+                experience = dataLoad.experience;
+                player.SetLevel(dataLoad.level);
+                player.SetDamagePlayer(dataLoad.damage);
+                //set level of player
+                if (GetCurrentLevel() != 1)
+                    player.SetLevel(GetCurrentLevel());
+                player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+                OnHitpointChange();
+                OnManapointChange();
+                player.SetDamage(GetCurrentLevel());
+                //make call only once only
+                SceneManager.sceneLoaded -= LoadState;
+            }
         }
+        catch (System.Exception e)
+        {
+            //handle error
+            Debug.Log(e.Message);
+        }
+
         //----------------------------
         //check if has save data
         // if (!PlayerPrefs.HasKey("SaveState"))
@@ -288,10 +297,17 @@ public class GameManager : MonoBehaviour
     //on scene loaded - call every time load scene
     public void OnSceneLoaded(Scene s, LoadSceneMode mode)
     {
-        //set spawn point
-        player.transform.position = GameObject.Find("SpawnPoint").transform.position;
-        OnHitpointChange();
-        OnManapointChange();
+        try
+        {
+            //set spawn point
+            player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+            OnHitpointChange();
+            OnManapointChange();
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     //Back to MainMenuScene

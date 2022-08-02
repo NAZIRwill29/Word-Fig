@@ -1215,11 +1215,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883707728829000744, guid: 6d95c1eee5617b241b999775bf11cc9d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.68
+      value: -0.854
       objectReference: {fileID: 0}
     - target: {fileID: 1883707728829000744, guid: 6d95c1eee5617b241b999775bf11cc9d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.56
+      value: 0.579
       objectReference: {fileID: 0}
     - target: {fileID: 1883707728829000744, guid: 6d95c1eee5617b241b999775bf11cc9d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5883,6 +5883,7 @@ MonoBehaviour:
   pesosText: {fileID: 1601921201}
   buyText: {fileID: 1334834054}
   xpText: {fileID: 1683965566}
+  itemText: {fileID: 0}
   characterSelectionSprite: {fileID: 1102552028}
   itemSelectionSprite: {fileID: 1474366633}
   xpBar: {fileID: 240409872}
@@ -6567,6 +6568,7 @@ MonoBehaviour:
   - {fileID: -5122681035914893960, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: -7476853483033896908, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   itemPrices: 1400000014000000140000005a0000005a0000005a000000
+  itemNames: []
   xpTable: 0a000000140000002300000032000000460000005f0000007d000000a0000000be000000e600000013010000360100005e0100008b010000c2010000030200004402000099020000da02000020030000
   player: {fileID: 1613900864}
   floatingTextManager: {fileID: 2119963647}
@@ -45067,11 +45069,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8112459566250669304, guid: fc3b011df300ac84abf9ffb1a6a6e2f8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.305
       objectReference: {fileID: 0}
     - target: {fileID: 8112459566250669304, guid: fc3b011df300ac84abf9ffb1a6a6e2f8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.046
       objectReference: {fileID: 0}
     - target: {fileID: 8112459566250669304, guid: fc3b011df300ac84abf9ffb1a6a6e2f8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -45113,6 +45115,10 @@ PrefabInstance:
       propertyPath: wordScript
       value: 
       objectReference: {fileID: 33450438}
+    - target: {fileID: 8112459566250669307, guid: fc3b011df300ac84abf9ffb1a6a6e2f8, type: 3}
+      propertyPath: specialChar
+      value: 
+      objectReference: {fileID: 965308286}
     - target: {fileID: 8112459566250669307, guid: fc3b011df300ac84abf9ffb1a6a6e2f8, type: 3}
       propertyPath: keyboardScript
       value: 
@@ -46852,7 +46858,6 @@ MonoBehaviour:
   - {fileID: 7019857753771223099, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: -8167126452187029819, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: 7833055168305552414, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
-  specialCharScript: {fileID: 965308287}
 --- !u!224 &1943143155
 RectTransform:
   m_ObjectHideFlags: 0

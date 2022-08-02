@@ -127,12 +127,12 @@ MonoBehaviour:
   hitpoint: 10
   maxHitpoint: 10
   pushRecoverySpeed: 0.2
-  ySpeed: 0.7
-  xSpeed: 1
+  ySpeed: 0.1
+  xSpeed: 0.2
   triggerSound: {fileID: 8300000, guid: e7ee25a47d63b46cdaf65480d62b405c, type: 3}
   xpValue: 1
-  triggerLength: 0.4
-  chaseLength: 0.7
+  triggerLength: 2.25
+  chaseLength: 2.5
   filter:
     useTriggers: 0
     useLayerMask: 0

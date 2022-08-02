@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//abstract = it has to be inherited
+[RequireComponent(typeof(AudioSource), typeof(BoxCollider2D))]
 public abstract class Mover : Fighter
 {
     protected BoxCollider2D boxCollider;

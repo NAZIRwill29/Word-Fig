@@ -37864,6 +37864,14 @@ PrefabInstance:
       propertyPath: xpValue
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4927590812548679988, guid: d1a6ba6a1c4ea9140b445d7bacb1994a, type: 3}
+      propertyPath: chaseLength
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4927590812548679988, guid: d1a6ba6a1c4ea9140b445d7bacb1994a, type: 3}
+      propertyPath: triggerLength
+      value: 2.25
+      objectReference: {fileID: 0}
     - target: {fileID: 4927590812548679992, guid: d1a6ba6a1c4ea9140b445d7bacb1994a, type: 3}
       propertyPath: m_Name
       value: Enemy_1

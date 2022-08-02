@@ -11,8 +11,8 @@ public class Enemy : Mover
     public float chaseLength = 5;
     private bool chasing;
     private bool collidingWithPlayer;
-    private Transform playerTransform;
-    private Vector3 startingPosition;
+    public Transform playerTransform;
+    public Vector3 startingPosition;
     //hitbox
     private BoxCollider2D hitbox;
     private Collider2D[] hits = new Collider2D[10];
@@ -26,7 +26,7 @@ public class Enemy : Mover
         hitbox = transform.GetChild(0).GetComponent<BoxCollider2D>();
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         //is player in range?
         if (Vector3.Distance(playerTransform.position, startingPosition) < chaseLength)
