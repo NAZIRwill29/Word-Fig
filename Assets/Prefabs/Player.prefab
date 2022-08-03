@@ -426,7 +426,6 @@ GameObject:
   - component: {fileID: 8112459566250669305}
   - component: {fileID: 8112459566250669310}
   - component: {fileID: 8112459566250669307}
-  - component: {fileID: 5768145271132913729}
   - component: {fileID: 1903958258}
   m_Layer: 7
   m_Name: Player
@@ -556,18 +555,6 @@ MonoBehaviour:
   wordScript: {fileID: 0}
   keyboardScript: {fileID: 0}
   specialChar: {fileID: 0}
---- !u!114 &5768145271132913729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8112459566250669311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1b9ec03b2029c4ab9422ae133d3ec2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &1903958258
 AudioSource:
   m_ObjectHideFlags: 0

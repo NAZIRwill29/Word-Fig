@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     public Animator deathMenuAnim;
     public Text infoLevelText;
     public Keyboard keyboardScript;
+    public GameObject dontDestroyGameObject;
+    //public MainMenuController mainMenuControllerScript;
+    private string spawnPointName = "SpawnPoint1";
     // public InputField userNameInput;
     // public Text userNameText;
     // public string userName;
@@ -50,7 +53,7 @@ public class GameManager : MonoBehaviour
         if (GameManager.instance != null)
         {
             Destroy(gameObject);
-            Destroy(player.gameObject);
+            Destroy(dontDestroyGameObject);
             Destroy(canvas);
             return;
         }
@@ -120,10 +123,8 @@ public class GameManager : MonoBehaviour
                 default:
                     break;
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -262,7 +263,7 @@ public class GameManager : MonoBehaviour
                 //set level of player
                 if (GetCurrentLevel() != 1)
                     player.SetLevel(GetCurrentLevel());
-                player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+                player.transform.position = GameObject.Find(spawnPointName).transform.position;
                 OnHitpointChange();
                 OnManapointChange();
                 player.SetDamage(GetCurrentLevel());
@@ -300,7 +301,7 @@ public class GameManager : MonoBehaviour
         try
         {
             //set spawn point
-            player.transform.position = GameObject.Find("SpawnPoint").transform.position;
+            player.transform.position = GameObject.Find(spawnPointName).transform.position;
             OnHitpointChange();
             OnManapointChange();
         }
@@ -310,9 +311,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //get spawnPointName from portal
+    public void PassSpawnPointName(string name)
+    {
+        spawnPointName = name;
+    }
+
     //Back to MainMenuScene
     public void BackToMenu()
     {
+        //set spawnPoint to be same position as when player left
+        //spawnPointName = "SpawnPoint";
+        // string name = SceneManager.GetActiveScene().name;
+        // Debug.Log(name);
+        // mainMenuControllerScript.PassSceneName(name);
+        GameObject spawnPoint = GameObject.Find(spawnPointName);
+        spawnPoint.transform.position = player.transform.position;
         OnMainMenu();
         SaveState();
         SceneManager.LoadScene(0);

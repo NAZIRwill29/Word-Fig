@@ -8,10 +8,12 @@ using UnityEditor;
 #endif
 public class MainMenuController : MonoBehaviour
 {
+    private string sceneName = "MainScene";
     //start game
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        //Debug.Log(sceneName);
+        SceneManager.LoadScene(sceneName);
         GameManager.instance.OnStartGame();
     }
     //exit game
@@ -28,4 +30,11 @@ public class MainMenuController : MonoBehaviour
     {
         GameManager.instance.ResetSaveState();
     }
+
+    //get sceneName from backToMenuButton
+    // public void PassSceneName(string name)
+    // {
+    //     sceneName = name;
+    //     Debug.Log(sceneName);
+    // }
 }
