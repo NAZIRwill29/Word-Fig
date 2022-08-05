@@ -28,8 +28,11 @@ public class GameManager : MonoBehaviour
     public Text infoLevelText;
     public Keyboard keyboardScript;
     public GameObject dontDestroyGameObject;
-    //public MainMenuController mainMenuControllerScript;
+    public MainMenuController mainMenuControllerScript;
+    public GameObject[] startButtons;
     private string spawnPointName = "SpawnPoint1";
+    [SerializeField]
+    private int stagePassedNo;
     // public InputField userNameInput;
     // public Text userNameText;
     // public string userName;
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
         public int experience;
         public int level;
         public int damage;
+        public int stage;
     }
 
     private void Awake()
@@ -52,31 +56,86 @@ public class GameManager : MonoBehaviour
         //check if have gameObject
         if (GameManager.instance != null)
         {
-            Destroy(gameObject);
-            Destroy(dontDestroyGameObject);
-            Destroy(canvas);
+            StartCoroutine(SetStage(true));
+            //set stage based on how many stage passed
+            Debug.Log("awake1");
             return;
         }
         instance = this;
         SceneManager.sceneLoaded += LoadState;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        Debug.Log("awake2");
+        StartCoroutine(SetStage(false));
         //userNameInput.GetComponentInChildren<Text>().text = userName;
     }
 
-    //when on game turn on player and canvas
+    private IEnumerator SetStage(bool isInstance)
+    {
+        if (isInstance)
+        {
+            //set stage if instance != null
+            yield return StartCoroutine(TurnOnStageButton());
+            yield return StartCoroutine(DestroyGameObject());
+        }
+        else
+        {
+            //set stage if instance = null 
+            //- turn on stage button based on player achievement
+            yield return StartCoroutine(LoadData());
+            yield return StartCoroutine(TurnOnStageButton());
+        }
+
+    }
+
+    //coroutine for setStage
+    private IEnumerator DestroyGameObject()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
+        Destroy(dontDestroyGameObject);
+        Destroy(canvas);
+        Destroy(mainMenuControllerScript.gameObject);
+    }
+    private IEnumerator LoadData()
+    {
+        yield return new WaitForSeconds(0);
+        //Debug.Log("load stageNo = " + stagePassedNo);
+        SceneManager.sceneLoaded += LoadState;
+    }
+    private IEnumerator TurnOnStageButton()
+    {
+        yield return new WaitForSeconds(0);
+        //Debug.Log("set stage = " + GameManager.instance.stagePassedNo);
+        TurnStageButton(true, 0, GameManager.instance.stagePassedNo + 1);
+    }
+
+    //stageButton - turn on/off
+    private void TurnStageButton(bool isWantTurnOn, int min, int max)
+    {
+        Debug.Log(max);
+        for (int i = min; i < max; i++)
+        {
+            //turn on/off startButton
+            GameManager.instance.startButtons[i].GetComponent<CanvasGroup>().interactable = isWantTurnOn;
+        }
+    }
+
+    //when on game turn on player and canvas and mainmneuUi
     public void OnStartGame()
     {
         SceneManager.sceneLoaded += LoadState;
-        player.gameObject.SetActive(true);
+        // player.gameObject.SetActive(true);
         canvas.SetActive(true);
+        mainMenuControllerScript.gameObject.SetActive(false);
         // userName = userNameInput.text;
         // userNameText.text = userName;
     }
-    //when on MainMenu scene turn off player and canvas
+    //when on MainMenu scene turn off player and canvas and mainmenuUI
     public void OnMainMenu()
     {
-        player.gameObject.SetActive(false);
+        // player.gameObject.SetActive(false);
         canvas.SetActive(false);
+        mainMenuControllerScript.gameObject.SetActive(true);
     }
 
     //to make as reference call function in floatingtextmanager script
@@ -190,7 +249,7 @@ public class GameManager : MonoBehaviour
     public void Respawn()
     {
         deathMenuAnim.SetTrigger("Hide");
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(mainMenuControllerScript.sceneName);
         player.Respawn();
     }
 
@@ -215,6 +274,7 @@ public class GameManager : MonoBehaviour
         data.experience = experience;
         data.level = player.levelPlayer;
         data.damage = player.damage;
+        data.stage = stagePassedNo;
         //transform instance to json
         string json = JsonUtility.ToJson(data);
         //method to write string to a file
@@ -222,6 +282,7 @@ public class GameManager : MonoBehaviour
         will survive between application reinstall or update and append to it the filename savefile.json*/
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
         Debug.Log("Save state");
+        Debug.Log("stage = " + data.stage);
     }
 
     public void ResetSaveState()
@@ -230,52 +291,61 @@ public class GameManager : MonoBehaviour
         experience = 0;
         player.SetLevel(1);
         player.SetDamagePlayer(1);
+        stagePassedNo = 0;
         // userName = "";
         SaveState();
         Debug.Log("Resetsave");
         SceneManager.sceneLoaded += LoadState;
         Debug.Log("Resetload");
+        TurnStageButton(false, 1, startButtons.Length);
     }
 
     //load game
     public void LoadState(Scene s, LoadSceneMode mode)
     {
-        try
+        //get path of saved data
+        string path = Application.persistentDataPath + "/savefile.json";
+        //check if exist
+        if (File.Exists(path))
         {
-            //get path of saved data
-            string path = Application.persistentDataPath + "/savefile.json";
-            //check if exist
-            if (File.Exists(path))
+            Debug.Log("Load state");
+            //read content
+            string json = File.ReadAllText(path);
+            //transform into SaveData instance
+            SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
+            //set gameData refer SaveData
+            //change player info
+            // userName = dataLoad.userName;
+            //Debug.Log(userName);
+            pesos = dataLoad.pesos;
+            experience = dataLoad.experience;
+            player.SetLevel(dataLoad.level);
+            player.SetDamagePlayer(dataLoad.damage);
+            stagePassedNo = dataLoad.stage;
+            //set level of player
+            if (GetCurrentLevel() != 1)
+                player.SetLevel(GetCurrentLevel());
+            try
             {
-                Debug.Log("Load state");
-                //read content
-                string json = File.ReadAllText(path);
-                //transform into SaveData instance
-                SaveData dataLoad = JsonUtility.FromJson<SaveData>(json);
-                //set gameData refer SaveData
-                //change player info
-                // userName = dataLoad.userName;
-                //Debug.Log(userName);
-                pesos = dataLoad.pesos;
-                experience = dataLoad.experience;
-                player.SetLevel(dataLoad.level);
-                player.SetDamagePlayer(dataLoad.damage);
-                //set level of player
-                if (GetCurrentLevel() != 1)
-                    player.SetLevel(GetCurrentLevel());
-                player.transform.position = GameObject.Find(spawnPointName).transform.position;
-                OnHitpointChange();
-                OnManapointChange();
-                player.SetDamage(GetCurrentLevel());
-                //make call only once only
-                SceneManager.sceneLoaded -= LoadState;
+                //check if exist
+                if (GameObject.Find("SpawnPoint1"))
+                {
+                    player.transform.position = GameObject.Find("SpawnPoint1").transform.position;
+                }
             }
+            catch (System.Exception e)
+            {
+                //handle error
+                Debug.Log(e.Message);
+            }
+            OnHitpointChange();
+            OnManapointChange();
+            player.SetDamage(GetCurrentLevel());
+            //make call only once only
+            SceneManager.sceneLoaded -= LoadState;
+            Debug.Log("stage = " + stagePassedNo);
         }
-        catch (System.Exception e)
-        {
-            //handle error
-            Debug.Log(e.Message);
-        }
+
 
         //----------------------------
         //check if has save data
@@ -300,21 +370,33 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            //set spawn point
-            player.transform.position = GameObject.Find(spawnPointName).transform.position;
-            OnHitpointChange();
-            OnManapointChange();
+            //check if exist
+            if (GameObject.Find(spawnPointName))
+            {
+                //set spawn point
+                player.transform.position = GameObject.Find(spawnPointName).transform.position;
+            }
         }
         catch (System.Exception e)
         {
             Debug.Log(e.Message);
         }
+        OnHitpointChange();
+        OnManapointChange();
     }
 
     //get spawnPointName from portal
     public void PassSpawnPointName(string name)
     {
         spawnPointName = name;
+    }
+
+    //get stage passed by player
+    public void PassStagePassed(int num)
+    {
+        //prevent from decreased
+        if (stagePassedNo < num)
+            stagePassedNo = num;
     }
 
     //Back to MainMenuScene
