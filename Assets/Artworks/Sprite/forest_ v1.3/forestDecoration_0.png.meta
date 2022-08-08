@@ -71,6 +71,18 @@ TextureImporter:
   - first:
       213: -4109847586734349071
     second: ForestProp_16
+  - first:
+      213: 4936443468445985291
+    second: ChestV3_1
+  - first:
+      213: -1563555938909550586
+    second: ChestV3_2
+  - first:
+      213: 896149588500250336
+    second: ChestV3_3
+  - first:
+      213: -5003879903968615713
+    second: ChestV3_4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -686,6 +698,90 @@ TextureImporter:
       bones: []
       spriteID: 1f4e3bf0563e6f6c0800000000000000
       internalID: -4109847586734349071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestV3_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 51
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0a258e1e25c18440800000000000000
+      internalID: 4936443468445985291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestV3_2
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 51
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60808da58222d4ae0800000000000000
+      internalID: -1563555938909550586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestV3_3
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 19
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ee7b208d43cf6c00800000000000000
+      internalID: 896149588500250336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestV3_4
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 19
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd22c313db5ae8ab0800000000000000
+      internalID: -5003879903968615713
       vertices: []
       indices: 
       edges: []
