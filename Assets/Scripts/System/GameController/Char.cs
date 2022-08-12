@@ -81,13 +81,33 @@ public class Char : MonoBehaviour
     //add to birthChar
     public void AddToBirthchar(bool isParentWord)
     {
-        transform.SetParent(keyboardScript.birthChar.transform, true);
+        //check if exist
+        if (keyboardScript)
+            transform.SetParent(keyboardScript.birthChar.transform, true);
         //turn on special char image
         image.SetActive(true);
         //refresh isClick 
         isClick = false;
         if (isParentWord)
             wordScript.ChangeTotalCharInWord(-1);
+    }
+
+    //when reset
+    public void AddToSpecialChar()
+    {
+        //turn on special char image
+        image.SetActive(true);
+        //refresh isClick 
+        isClick = false;
+        try
+        {
+            transform.SetParent(keyboardScript.specialCharContainer.transform, true);
+        }
+        catch (System.Exception e)
+        {
+            //handle error
+            Debug.Log(e.Message);
+        }
     }
 
     //write random letter
@@ -105,33 +125,34 @@ public class Char : MonoBehaviour
     }
 
     //set special char
-    public void SetSpecialChar(string text)
-    {
-        special = text;
-        ChangeSpecialCharImage(text);
-    }
+    // public void SetSpecialChar(string text)
+    // {
+    //     special = text;
+    //     ChangeSpecialCharImage(text);
+    // }
 
     //change source image for specialChar - only when level up
-    public void ChangeSpecialCharImage(string text)
-    {
-        switch (text)
-        {
-            case "thunder":
-                imageImg.sprite = keyboardScript.specialCharSprites[0];
-                break;
-            case "ice":
-                imageImg.sprite = keyboardScript.specialCharSprites[1];
-                break;
-            case "fire":
-                imageImg.sprite = keyboardScript.specialCharSprites[2];
-                break;
-            case "wind":
-                imageImg.sprite = keyboardScript.specialCharSprites[3];
-                break;
-            default:
-                break;
-        }
-    }
+    // public void ChangeSpecialCharImage(string text)
+    // {
+    //     switch (text)
+    //     {
+    //         case "thunder":
+    //             imageImg.sprite = keyboardScript.specialCharSprites[1];
+    //             break;
+    //         case "ice":
+    //             imageImg.sprite = keyboardScript.specialCharSprites[2];
+    //             break;
+    //         case "fire":
+    //             imageImg.sprite = keyboardScript.specialCharSprites[3];
+    //             break;
+    //         case "wind":
+    //             imageImg.sprite = keyboardScript.specialCharSprites[4];
+    //             break;
+    //         default:
+    //             imageImg.sprite = keyboardScript.specialCharSprites[0];
+    //             break;
+    //     }
+    // }
 
     //coroutine word idle
     private IEnumerator WordIdle()

@@ -10,7 +10,7 @@ public class CharObj : MonoBehaviour
     public GameObject keyboard;
     public GameObject tempChar;
     public char letter;
-    private int damage;
+    public int damage;
     private int damageCombine;
     [SerializeField]
     private float pushForce = 3;
@@ -20,6 +20,8 @@ public class CharObj : MonoBehaviour
     private bool isWordCombine, isCharObjWordCombHit;
     public Sprite[] charSprites;
     private Vector3 originalPosition;
+    public string word;
+    public string specialPower;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,17 +54,20 @@ public class CharObj : MonoBehaviour
         // transform.rotation = Quaternion.Euler(0, 0, targetChar.transform.rotation.z);
         //get letter from char
         letter = letterClick;
+        //refresh word - mkae it empty
+        word = "";
         // Debug.Log("LetterCharObj = " + letter);
         //turn on SpriteRendere
         charSR.enabled = true;
-        SetSprite(specialText);
+        //specialText - make special power based on specialText
+        SetSprecialPower(specialText);
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
         StartCoroutine(StopCharObj(id));
     }
 
     //shoot combine word
-    public void ShootWord(GameObject targetChar, int damageWord)
+    public void ShootWord(GameObject targetChar, int damageWord, string letterCombine)
     {
         transform.position = GameManager.instance.player.gameObject.transform.position;
         // transform.rotation = targetChar.transform.rotation;
@@ -72,6 +77,8 @@ public class CharObj : MonoBehaviour
         // Debug.Log(isWordCombine);
         damageCombine = damageWord;
         Debug.Log("damage = " + damageCombine);
+        //do someting about word - for boss
+        word = letterCombine;
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
         charObjAudio.PlayOneShot(triggerSound, 1.0f);
         StartCoroutine(StopCharObj());
@@ -191,8 +198,19 @@ public class CharObj : MonoBehaviour
             origin = transform.position,
             pushForce = pushForce
         };
-        //send message to other to make call ReceiveDamage function
-        other.SendMessage("ReceiveDamage", dmg);
+        if (specialPower != "")
+        {
+            //pass special power in damage
+            other.SendMessage("ReceiveSpecialPowerDamage", specialPower);
+            //send message to other to make call ReceiveDamage function
+            other.SendMessage("ReceiveDamage", dmg);
+        }
+        else
+        {
+            //normal
+            //send message to other to make call ReceiveDamage function
+            other.SendMessage("ReceiveDamage", dmg);
+        }
         //hide charObj
         charSR.enabled = false;
         // Debug.Log("trigger");
@@ -210,22 +228,27 @@ public class CharObj : MonoBehaviour
         isCharObjWordCombHit = true;
     }
 
-    //set sprite - when attack
-    public void SetSprite(string text)
+    //set special power - when attack
+    public void SetSprecialPower(string text)
     {
+        specialPower = text;
         switch (text)
         {
             case "thunder":
                 charSR.sprite = charSprites[1];
+                //TODO - do special power image - cange charSprites image
                 break;
             case "ice":
                 charSR.sprite = charSprites[2];
+                //do special power image
                 break;
             case "fire":
                 charSR.sprite = charSprites[3];
+                //do special power image
                 break;
             case "wind":
                 charSR.sprite = charSprites[4];
+                //do special power image
                 break;
             default:
                 charSR.sprite = charSprites[0];

@@ -69,7 +69,7 @@ public class Word : MonoBehaviour
             targetChar = keyboard.targetChar;
             //shoot word
             charObj.charAnim.SetTrigger("show");
-            charObj.ShootWord(targetChar, damage);
+            charObj.ShootWord(targetChar, damage, letterCombine);
             wordAudio.PlayOneShot(triggerSound, 1.0f);
             //increase mana and hp by refer on letter in word
             player.Heal(damage);
@@ -88,6 +88,26 @@ public class Word : MonoBehaviour
     {
         totalCharInWord += number;
         // Debug.Log(totalCharInWord);
+    }
+
+    //reset word - send char into birthchar
+    public void ResetWord()
+    {
+        //check exist
+        if (!GetComponentInChildren<Char>())
+            return;
+        charWords = GetComponentsInChildren<Char>();
+        foreach (var item in charWords)
+        {
+            item.AddToBirthchar(true);
+        }
+        ResetTotalCharInWord();
+    }
+
+    //reset number of char in word
+    public void ResetTotalCharInWord()
+    {
+        totalCharInWord = 0;
     }
 
     //refresh number of char in word - for limit

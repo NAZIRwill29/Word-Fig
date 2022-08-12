@@ -14,6 +14,9 @@ public class Shooting : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //set paused game  or set stun
+        if (GameManager.instance.isPaused || bossScript.isStun)
+            return;
         cooldown = Random.Range(minCooldown, maxCooldown);
         //is player in range?
         if (Vector3.Distance(bossScript.playerTransform.position, bossScript.startingPosition) < chaseLength)

@@ -61,6 +61,11 @@ public class BirthChar : MonoBehaviour
         // Debug.Log(totalCharInKeyboard);
     }
 
+    public void ResetCharNoInKeyboard()
+    {
+        totalCharInKeyboard = 0;
+    }
+
     //coroutine keyboard idle
     private IEnumerator KeyboardIdle()
     {

@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
     private string spawnPointName = "SpawnPoint1";
     [SerializeField]
     private int stagePassedNo;
-    // public InputField userNameInput;
-    // public Text userNameText;
-    // public string userName;
-    // private string dataSave;
+    public bool isPaused = false;
+    public GameObject inGameUI;
+    private CanvasGroup canvasCG;
+    private CanvasGroup mainMenuControllerCG;
 
     //required for JsonUtility
     //it will only transform things to JSON if they are tagged as Serializable.
@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
             StartCoroutine(SetStage(true));
             //set stage based on how many stage passed
             Debug.Log("awake1");
+            player.ResetSpecialChar();
+            player.SetSpecialChar();
             return;
         }
         instance = this;
@@ -66,7 +68,15 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         Debug.Log("awake2");
         StartCoroutine(SetStage(false));
+        //player.ResetSpecialChar();
+        player.SetSpecialChar();
         //userNameInput.GetComponentInChildren<Text>().text = userName;
+    }
+
+    private void Start()
+    {
+        canvasCG = canvas.GetComponent<CanvasGroup>();
+        mainMenuControllerCG = mainMenuControllerScript.gameObject.GetComponent<CanvasGroup>();
     }
 
     private IEnumerator SetStage(bool isInstance)
@@ -234,6 +244,7 @@ public class GameManager : MonoBehaviour
     //hitpoint bar
     public void OnHitpointChange()
     {
+        //change in info
         float ratio = (float)player.hitpoint / (float)player.maxHitpoint;
         hitpointBar.localScale = new Vector3(ratio, 1, 1);
         hitpointText.text = player.hitpoint.ToString() + " / " + player.maxHitpoint.ToString();
@@ -241,6 +252,7 @@ public class GameManager : MonoBehaviour
     //mana bar
     public void OnManapointChange()
     {
+        //change in info
         float ratio = (float)player.manapoint / (float)player.maxManapoint;
         manapointBar.localScale = new Vector3(ratio, 1, 1);
         manapointText.text = player.manapoint.ToString() + " / " + player.maxManapoint.ToString();
@@ -255,18 +267,6 @@ public class GameManager : MonoBehaviour
 
     public void SaveState()
     {
-        //-----------------------
-        // dataSave = "";
-
-        // dataSave += "0" + "|";
-        // dataSave += pesos.ToString() + "|";
-        // dataSave += experience.ToString() + "|";
-        // dataSave += weapon.weaponLevel.ToString() + "|";
-        // dataSave += userName;
-
-        // PlayerPrefs.SetString("SaveState", dataSave);
-        //-----------------------
-
         //save variable
         SaveData data = new SaveData();
         // data.userName = userName;
@@ -285,11 +285,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("stage = " + data.stage);
     }
 
+    //reset button
     public void ResetSaveState()
     {
         pesos = 0;
         experience = 0;
-        player.SetLevel(1);
+        player.SetLevelPlayer(1);
         player.SetDamagePlayer(1);
         stagePassedNo = 0;
         // userName = "";
@@ -298,6 +299,15 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += LoadState;
         Debug.Log("Resetload");
         TurnStageButton(false, 1, startButtons.Length);
+        try
+        {
+            player.ResetSpecialChar();
+        }
+        catch (System.Exception e)
+        {
+            //handle error
+            Debug.Log(e.Message);
+        }
     }
 
     //load game
@@ -345,37 +355,19 @@ public class GameManager : MonoBehaviour
             SceneManager.sceneLoaded -= LoadState;
             Debug.Log("stage = " + stagePassedNo);
         }
-
-
-        //----------------------------
-        //check if has save data
-        // if (!PlayerPrefs.HasKey("SaveState"))
-        //     return;
-        //string[] data = PlayerPrefs.GetString("SaveState").Split('|');
-        // string[] data = "0|0|0|0".Split('|');
-        //change player skin
-        // pesos = int.Parse(data[1]);
-        // experience = int.Parse(data[2]);
-        // weapon.weaponLevel = int.Parse(data[3]);
-        //set level of player
-        // if (GetCurrentLevel() != 1)
-        //     player.SetLevel(GetCurrentLevel());
-        // player.transform.position = GameObject.Find("SpawnPoint").transform.position;
-        //make call only once only
-        // SceneManager.sceneLoaded -= LoadState;
-        //-------------------------------
     }
     //on scene loaded - call every time load scene
     public void OnSceneLoaded(Scene s, LoadSceneMode mode)
     {
         try
         {
-            //check if exist
+            Debug.Log("OnSceneLoaded");
+            //set spawn point
             if (GameObject.Find(spawnPointName))
-            {
-                //set spawn point
                 player.transform.position = GameObject.Find(spawnPointName).transform.position;
-            }
+            //get inGameUI
+            if (GameObject.Find("InGameUI"))
+                inGameUI = GameObject.Find("InGameUI");
         }
         catch (System.Exception e)
         {
@@ -409,8 +401,17 @@ public class GameManager : MonoBehaviour
         // mainMenuControllerScript.PassSceneName(name);
         GameObject spawnPoint = GameObject.Find(spawnPointName);
         spawnPoint.transform.position = player.transform.position;
+        //reset word and keyboard container
+        keyboardScript.ResetKeyboard();
+        keyboardScript.wordObject.GetComponent<Word>().ResetWord();
         OnMainMenu();
         SaveState();
         SceneManager.LoadScene(0);
+    }
+
+    //change isPaused
+    public void ChangeIsPaused(bool isPausedGame)
+    {
+        isPaused = isPausedGame;
     }
 }

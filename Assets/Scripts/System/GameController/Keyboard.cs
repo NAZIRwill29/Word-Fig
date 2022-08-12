@@ -13,7 +13,9 @@ public class Keyboard : MonoBehaviour
     public char letterClick;
     public GameObject birthChar;
     private BirthChar birthCharScript;
-    public Sprite[] specialCharSprites;
+    public GameObject specialCharContainer;
+    private Char[] charInKeyboards;
+    //public Sprite[] specialCharSprites;
     private char[] letters = new char[]
     {
         'A', 'A', 'A', 'A', 'A', 'A', 'A',
@@ -51,9 +53,6 @@ public class Keyboard : MonoBehaviour
     {
         keyboardCG = GetComponent<CanvasGroup>();
         birthCharScript = birthChar.GetComponent<BirthChar>();
-        //charObj = GameObject.Find("CharObj");
-        // wordObject = GameObject.Find("Word");
-        // tempChar = GameObject.Find("TempChar");
     }
 
     // Update is called once per frame
@@ -81,5 +80,19 @@ public class Keyboard : MonoBehaviour
     {
         int randomNo = Random.Range(0, letters.Length);
         return letters[randomNo];
+    }
+
+    //reset keyboard - send char to birthchar
+    public void ResetKeyboard()
+    {
+        //check exist
+        if (!GetComponentInChildren<Char>())
+            return;
+        charInKeyboards = GetComponentsInChildren<Char>();
+        foreach (var item in charInKeyboards)
+        {
+            item.AddToBirthchar(true);
+        }
+        birthCharScript.ResetCharNoInKeyboard();
     }
 }

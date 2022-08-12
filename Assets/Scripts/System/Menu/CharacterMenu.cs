@@ -82,6 +82,9 @@ public class CharacterMenu : MonoBehaviour
     //upgrade char info -call from menubutton
     public void UpdateMenu()
     {
+        //set pause game
+        GameManager.instance.ChangeIsPaused(true);
+        GameManager.instance.inGameUI.GetComponent<CanvasGroup>().alpha = 0;
         //meta
         hitpointText.text = GameManager.instance.player.hitpoint.ToString() + " / " + GameManager.instance.player.maxHitpoint.ToString();
         manapointText.text = GameManager.instance.player.manapoint.ToString() + " / " + GameManager.instance.player.maxManapoint.ToString();
@@ -104,5 +107,13 @@ public class CharacterMenu : MonoBehaviour
             xpBar.localScale = new Vector3(completionRatio, 1, 1);
             xpText.text = currXpIntoLevel.ToString() + " / " + diff;
         }
+    }
+
+    //exit menu
+    public void ExitMenu()
+    {
+        //set unpause game
+        GameManager.instance.ChangeIsPaused(false);
+        GameManager.instance.inGameUI.GetComponent<CanvasGroup>().alpha = 1;
     }
 }

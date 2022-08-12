@@ -128,11 +128,13 @@ MonoBehaviour:
   triggerSound: {fileID: 8300000, guid: 0f7d0b7c3397f4dac91f20e8a77d2d57, type: 3}
   charAnim: {fileID: 133399915}
   charSprites:
-  - {fileID: -1361928931727379795, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 7019857753771223099, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: -8167126452187029819, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: 7833055168305552414, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   - {fileID: 2603361281007707339, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
+  word: 
+  specialPower: 
 --- !u!61 &7428761050804265825
 BoxCollider2D:
   m_ObjectHideFlags: 0
