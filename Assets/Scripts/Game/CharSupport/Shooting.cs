@@ -2,43 +2,78 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shooting : MonoBehaviour
+public class Shooting : EnemyAttackPattern
 {
+    [Tooltip("for shooting")]
     [SerializeField]
-    private float shootingSpeed, minCooldown, maxCooldown, cooldown, chaseLength;
+    protected float shootingSpeed, minShootCooldown, maxShootCooldown;
     public GameObject[] ballShoots;
-    private Rigidbody2D ballShootsRb;
-    private Ball ballScript;
-    private float lastShoot;
-    public Boss bossScript;
-
-    private void FixedUpdate()
+    protected Rigidbody2D ballShootsRb;
+    protected Ball ballScript;
+    [Tooltip("for magic shoot")]
+    [SerializeField]
+    protected bool isMagic;
+    protected override void FixedUpdate()
     {
-        //set paused game  or set stun
-        if (GameManager.instance.isPaused || bossScript.isStun)
+        base.FixedUpdate();
+        if (!isCanAttack)
             return;
-        cooldown = Random.Range(minCooldown, maxCooldown);
+        AttackTypeShooting();
+    }
+
+    protected virtual void AttackTypeShooting()
+    {
+        cooldownAttack = Random.Range(minShootCooldown, maxShootCooldown);
         //is player in range?
-        if (Vector3.Distance(bossScript.playerTransform.position, bossScript.startingPosition) < chaseLength)
+        if (bossScript)
         {
-            if (Time.time - lastShoot > cooldown)
+            if (Vector3.Distance(bossScript.playerTransform.position, bossScript.startingPosition) < chaseLength)
             {
-                int index = Random.Range(0, ballShoots.Length);
-                ballShootsRb = ballShoots[index].GetComponent<Rigidbody2D>();
-                ballScript = ballShoots[index].GetComponent<Ball>();
-                if (!ballScript.isShoot)
+                if (Time.time - lastAttack > cooldownAttack)
                 {
-                    lastShoot = Time.time;
-                    ShootingBall(index);
+                    ShootingBall();
+                }
+            }
+        }
+        else if (enemyScript)
+        {
+            if (Vector3.Distance(enemyScript.playerTransform.position, enemyScript.startingPosition) < chaseLength)
+            {
+                if (Time.time - lastAttack > cooldownAttack)
+                {
+                    ShootingBall();
                 }
             }
         }
     }
 
-    //shooting function
-    private void ShootingBall(int index)
+    protected virtual void ShootingBall()
     {
-        ballShootsRb.AddForce((bossScript.playerTransform.position - ballShoots[index].transform.position).normalized * shootingSpeed, ForceMode2D.Impulse);
+        int index = Random.Range(0, ballShoots.Length);
+        ballShootsRb = ballShoots[index].GetComponent<Rigidbody2D>();
+        ballScript = ballShoots[index].GetComponent<Ball>();
+        if (!ballScript.isShoot)
+        {
+            lastAttack = Time.time;
+            Shoot(index);
+        }
+    }
+
+    //shooting function
+    protected virtual void Shoot(int index)
+    {
+        if (bossScript)
+        {
+            ballShootsRb.AddForce((bossScript.playerTransform.position - ballShoots[index].transform.position).normalized * shootingSpeed, ForceMode2D.Impulse);
+        }
+        else if (enemyScript)
+        {
+            ballShootsRb.AddForce((enemyScript.playerTransform.position - ballShoots[index].transform.position).normalized * shootingSpeed, ForceMode2D.Impulse);
+        }
+        if (isMagic)
+            PlaySoundEffect(3);
+        else
+            PlaySoundEffect(6);
         ballScript.SetIsShoot(true);
     }
 }

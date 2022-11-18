@@ -12,21 +12,27 @@ public abstract class Mover : Fighter
     public float ySpeed = 0.7f;
     public float xSpeed = 1.0f;
     private Vector3 originalSize;
-    public AudioClip triggerSound;
     protected float lastImmuneMover;
+    //for special power immune
+    protected float lastSpecialImmuneMover;
+    protected float specialImmuneTime = 10;
     private float rotationZ = 0;
     private float prevRotationZ;
     //for stun
     public bool isStun = false;
     protected int continuousDamage;
     protected CharObj charObjScript;
+    //thunder, ice, fire, wind
+    public GameObject[] specialEffect;
+    // public AudioClip[] specialEffectSound;
+    protected int hitDamageByOther;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         originalSize = transform.localScale;
-        moverAudio = GetComponent<AudioSource>();
+        fighterAudio = GetComponent<AudioSource>();
         charObjScript = GameObject.Find("CharObj").GetComponent<CharObj>();
     }
 
@@ -71,6 +77,9 @@ public abstract class Mover : Fighter
     //update motor with target
     protected virtual void UpdateMotor(Vector3 input, GameObject targetObj)
     {
+        //set paused game  or set stun
+        if (GameManager.instance.isPaused || isStun)
+            return;
         float xSpeedTemp = 0;
         float ySpeedTemp = 0;
         float restrictMove = .2f;
@@ -164,7 +173,7 @@ public abstract class Mover : Fighter
         {
             lastImmuneMover = Time.time;
             //make sound effect when collide
-            moverAudio.PlayOneShot(triggerSound, 1.0f);
+            fighterAudio.PlayOneShot(effectSound[1], 0.75f);
             //Debug.Log("play sound");
             base.ReceiveDamage(dmg);
         }
@@ -177,75 +186,88 @@ public abstract class Mover : Fighter
         //check exist
         if (!gameObject)
             return;
-        //do something
-        Debug.Log(specialPower);
-        switch (specialPower)
+        if (Time.time - lastSpecialImmuneMover > specialImmuneTime)
         {
-            case "thunder":
-                //do special power effect
-                ThunderEffect();
-                break;
-            case "ice":
-                //do special power effect
-                IceEffect();
-                break;
-            case "fire":
-                //do special power effect
-                continuousDamage = charObjScript.damage / 5;
-                FireEffect();
-                break;
-            case "wind":
-                //do special power effect
-                WindEffect();
-                break;
-            default:
-                break;
+            lastSpecialImmuneMover = Time.time;
+            //do something
+            //Debug.Log(specialPower);
+            switch (specialPower)
+            {
+                case "thunder":
+                    //do special power effect
+                    ThunderEffect();
+                    break;
+                case "ice":
+                    //do special power effect
+                    IceEffect();
+                    break;
+                case "fire":
+                    //do special power effect
+                    continuousDamage = hitDamageByOther / 5;
+                    //make sure has damage
+                    if (continuousDamage < 1)
+                        continuousDamage = 1;
+                    FireEffect();
+                    break;
+                case "wind":
+                    //do special power effect
+                    WindEffect();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
-    //special effect - TODO
-    //thunder
-    private void ThunderEffect()
+    public void ChangeEnemyDamage(int damage)
     {
-        effectAnim[0].SetTrigger("Explode");
-        moverAudio.PlayOneShot(specialEffectSound[0], 1.0f);
+        hitDamageByOther = damage;
+    }
+
+    //thunder
+    protected void ThunderEffect()
+    {
+        specialEffect[0].SetActive(true);
+        fighterAudio.PlayOneShot(GameManager.instance.specialEffectSound[0], 1.0f);
         //stun for 5 sec
-        StartCoroutine(SetStun(5));
+        StartCoroutine(SetStun(5, specialEffect[0]));
     }
     //ice
-    private void IceEffect()
+    protected void IceEffect()
     {
-        effectAnim[1].SetTrigger("Hit");
-        moverAudio.PlayOneShot(specialEffectSound[1], 1.0f);
+        specialEffect[1].SetActive(true);
+        fighterAudio.PlayOneShot(GameManager.instance.specialEffectSound[1], 1.0f);
         //slow move - lower the speed for 10 sec - speed - (speed/3)
-        StartCoroutine(SetSpeed(10, -3));
+        StartCoroutine(SetSpeed(10, -3, specialEffect[1]));
     }
     //fire
-    private void FireEffect()
+    protected void FireEffect()
     {
-        effectAnim[2].SetTrigger("Slash");
-        moverAudio.PlayOneShot(specialEffectSound[2], 1.0f);
+        specialEffect[2].SetActive(true);
+        fighterAudio.PlayOneShot(GameManager.instance.specialEffectSound[2], 1.0f);
         //continuous hit for 10 sec - damage/5 per 1 sec
-        StartCoroutine(SetContinuosHit(10));
+        StartCoroutine(SetContinuosHit(10, specialEffect[2]));
     }
     //wind
-    private void WindEffect()
+    protected void WindEffect()
     {
-        effectAnim[3].SetTrigger("Dead");
-        moverAudio.PlayOneShot(specialEffectSound[3], 1.0f);
+        specialEffect[3].SetActive(true);
+        fighterAudio.PlayOneShot(GameManager.instance.specialEffectSound[3], 1.0f);
         //increase speed for 10 sec - speed + (speed/3)
-        StartCoroutine(SetSpeed(10, 3));
+        StartCoroutine(SetSpeed(10, 3, specialEffect[3]));
+        StartCoroutine(SetContinuosHit(10, 2));
     }
 
     //coroutine stun
-    private IEnumerator SetStun(float time)
+    private IEnumerator SetStun(float time, GameObject effect)
     {
         isStun = true;
         yield return new WaitForSeconds(time);
         isStun = false;
+        effect.SetActive(false);
     }
     //coruotine set Speed move
-    private IEnumerator SetSpeed(float time, float num)
+    private IEnumerator SetSpeed(float time, float num, GameObject effect)
     {
         float prevXSpeed, prevYSpeed;
         prevXSpeed = xSpeed;
@@ -255,13 +277,23 @@ public abstract class Mover : Fighter
         yield return new WaitForSeconds(time);
         xSpeed = prevXSpeed;
         ySpeed = prevYSpeed;
+        effect.SetActive(false);
     }
-    //coroutine fire effect
-    private IEnumerator SetContinuosHit(float time)
+    //coroutine continuous damage
+    private IEnumerator SetContinuosHit(float time, int multDamage)
+    {
+        continuousDamage *= multDamage;
+        //receiveDamage
+        InvokeRepeating("CallReceiveDamage", 1, 1);
+        yield return new WaitForSeconds(time);
+        CancelInvoke("CallReceiveDamage");
+    }
+    private IEnumerator SetContinuosHit(float time, GameObject effect)
     {
         //receiveDamage
         InvokeRepeating("CallReceiveDamage", 1, 1);
         yield return new WaitForSeconds(time);
+        effect.SetActive(false);
         CancelInvoke("CallReceiveDamage");
     }
     //simple call receivedamage - for used by invoke
@@ -275,5 +307,12 @@ public abstract class Mover : Fighter
             pushForce = 0
         };
         ReceiveDamage(dmg);
+    }
+
+    //change chase speed
+    public void ChangeChaseSpeed(float xNum, float yNum)
+    {
+        xSpeed = xNum;
+        ySpeed = yNum;
     }
 }

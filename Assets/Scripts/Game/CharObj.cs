@@ -7,15 +7,16 @@ public class CharObj : MonoBehaviour
     public float speed = 3.0f;
     private Rigidbody2D charRb;
     private SpriteRenderer charSR;
+    [SerializeField]
+    private SpriteRenderer charSpecialSR;
     public GameObject keyboard;
     public GameObject tempChar;
+    public Player playerScript;
     public char letter;
     public int damage;
     private int damageCombine;
     [SerializeField]
     private float pushForce = 3;
-    private AudioSource charObjAudio;
-    public AudioClip triggerSound;
     public Animator charAnim;
     private bool isWordCombine, isCharObjWordCombHit;
     public Sprite[] charSprites;
@@ -28,7 +29,6 @@ public class CharObj : MonoBehaviour
         charRb = GetComponent<Rigidbody2D>();
         charSR = GetComponent<SpriteRenderer>();
         //tempChar = GameObject.Find("TempChar");
-        charObjAudio = GetComponent<AudioSource>();
         originalPosition = transform.position;
     }
 
@@ -62,7 +62,7 @@ public class CharObj : MonoBehaviour
         //specialText - make special power based on specialText
         SetSprecialPower(specialText);
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
-        charObjAudio.PlayOneShot(triggerSound, 1.0f);
+        playerScript.PlaySoundShoot();
         StartCoroutine(StopCharObj(id));
     }
 
@@ -80,7 +80,7 @@ public class CharObj : MonoBehaviour
         //do someting about word - for boss
         word = letterCombine;
         charRb.AddForce((targetChar.transform.position - transform.position).normalized * speed, ForceMode2D.Impulse);
-        charObjAudio.PlayOneShot(triggerSound, 1.0f);
+        playerScript.PlaySoundShoot();
         StartCoroutine(StopCharObj());
     }
 
@@ -155,14 +155,16 @@ public class CharObj : MonoBehaviour
             //for stop charobj word combine
             isCharObjWordCombHit = false;
             Debug.Log("Weapon");
+            GameManager.instance.player.PlaySoundHitWeapon();
             AfterCollide();
             tempChar.GetComponent<TempChar>().CharAddToBirth();
         }
-        else
+        else if (other.tag == "Blocking")
         {
             //for stop charobj word combine
             isCharObjWordCombHit = false;
             Debug.Log("none");
+            GameManager.instance.player.PlaySoundHitBlocking();
             AfterCollide();
             tempChar.GetComponent<TempChar>().CharAddToBirth();
         }
@@ -198,19 +200,12 @@ public class CharObj : MonoBehaviour
             origin = transform.position,
             pushForce = pushForce
         };
+        //normal
+        //send message to other to make call ReceiveDamage function
+        other.SendMessage("ReceiveDamage", dmg);
+        //pass special power in damage
         if (specialPower != "")
-        {
-            //pass special power in damage
-            other.SendMessage("ReceiveSpecialPowerDamage", specialPower);
-            //send message to other to make call ReceiveDamage function
-            other.SendMessage("ReceiveDamage", dmg);
-        }
-        else
-        {
-            //normal
-            //send message to other to make call ReceiveDamage function
-            other.SendMessage("ReceiveDamage", dmg);
-        }
+            SendSpecialDamage(other);
         //hide charObj
         charSR.enabled = false;
         // Debug.Log("trigger");
@@ -235,24 +230,34 @@ public class CharObj : MonoBehaviour
         switch (text)
         {
             case "thunder":
-                charSR.sprite = charSprites[1];
-                //TODO - do special power image - cange charSprites image
+                charSpecialSR.sprite = charSprites[1];
+                //do special power image - cange charSprites image
                 break;
             case "ice":
-                charSR.sprite = charSprites[2];
+                charSpecialSR.sprite = charSprites[2];
                 //do special power image
                 break;
             case "fire":
-                charSR.sprite = charSprites[3];
+                charSpecialSR.sprite = charSprites[3];
                 //do special power image
                 break;
             case "wind":
-                charSR.sprite = charSprites[4];
+                charSpecialSR.sprite = charSprites[4];
                 //do special power image
                 break;
             default:
-                charSR.sprite = charSprites[0];
+                charSpecialSR.sprite = charSprites[0];
                 break;
         }
+    }
+    //send special damage to player
+    private void SendSpecialDamage(Collider2D coll)
+    {
+        //send damage value to player
+        if (coll.GetComponent<Enemy>())
+            coll.GetComponent<Enemy>().ChangeEnemyDamage(damage);
+        else if (coll.GetComponent<Boss>())
+            coll.GetComponent<Boss>().ChangeEnemyDamage(damage);
+        coll.SendMessage("ReceiveSpecialPowerDamage", specialPower);
     }
 }

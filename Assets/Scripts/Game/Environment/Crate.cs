@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class Crate : Fighter
 {
-    public AudioClip triggerSound;
-    protected AudioSource crateAudio;
     private float lastImmuneCrate;
+    public int rewardExp;
 
     private void Start()
     {
-        crateAudio = GetComponent<AudioSource>();
+        fighterAudio = GetComponent<AudioSource>();
     }
     protected override void Death()
     {
-        Destroy(gameObject);
+        fighterAudio.PlayOneShot(effectSound[0], 0.3f);
+        //death anim + destroy
+        StartCoroutine(DeathAnimDestroy());
+        //check if have dropitem -> drop item after death
+        if (dropItem)
+            dropItem.SpawnItem(transform);
+        if (rewardExp != 0)
+            GameManager.instance.GrantXp(rewardExp);
+    }
+    protected override IEnumerator DeathAnim()
+    {
+        yield return new WaitForSeconds(0);
+        effectAnim[0].SetTrigger("Explode");
     }
 
     protected override void ReceiveDamage(Damage dmg)
@@ -23,7 +34,7 @@ public class Crate : Fighter
         {
             lastImmuneCrate = Time.time;
             //make sound effect when collide
-            crateAudio.PlayOneShot(triggerSound, 1.0f);
+            fighterAudio.PlayOneShot(effectSound[1], 0.3f);
         }
         base.ReceiveDamage(dmg);
 
