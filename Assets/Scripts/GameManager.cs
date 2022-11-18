@@ -30,47 +30,68 @@ public class GameManager : MonoBehaviour
     public GameObject dontDestroyGameObject;
     public MainMenuController mainMenuControllerScript;
     public GameObject[] startButtons;
+    public GameObject alert;
     private string spawnPointName = "SpawnPoint1";
     [SerializeField]
     private int stagePassedNo;
-    public bool isPaused = false;
+    public bool isPaused = false, preventSpawnBoss;
     public GameObject inGameUI;
     private CanvasGroup canvasCG;
     private CanvasGroup mainMenuControllerCG;
+    public Image infoSpecialEffecttImage;
+    public Sprite[] specialEffectSprites;
+    public AudioClip[] specialEffectSound;
+    public AudioClip exitStageMusic;
+    public AudioSource gameManagerSound;
+    public Image infoStatusImage;
+    public Sprite[] statusSprites;
+    public AdsInitializer adsInitializer;
+    [SerializeField]
+    private int rewardedAdCount = 0;
+    public string dateSave;
+    public string dateNow;
 
     //required for JsonUtility
     //it will only transform things to JSON if they are tagged as Serializable.
     [System.Serializable]
     class SaveData
     {
-        // public string userName;
+        // public string userName
+        public string date;
         public int pesos;
         public int experience;
         public int level;
         public int damage;
         public int stage;
+        public int rewardedAdCount;
+        public bool preventSpawnBoss;
     }
 
     private void Awake()
     {
+        //get current date
+        dateNow = System.DateTime.Now.ToString("MM/dd/yyyy");
         //check if have gameObject
         if (GameManager.instance != null)
         {
-            StartCoroutine(SetStage(true));
+            StartCoroutine(SetMainMenu(true));
             //set stage based on how many stage passed
             Debug.Log("awake1");
             player.ResetSpecialChar();
             player.SetSpecialChar();
+            //reset preventSpawnBoss
+            preventSpawnBoss = false;
             return;
         }
         instance = this;
         SceneManager.sceneLoaded += LoadState;
         SceneManager.sceneLoaded += OnSceneLoaded;
         Debug.Log("awake2");
-        StartCoroutine(SetStage(false));
+        StartCoroutine(SetMainMenu(false));
         //player.ResetSpecialChar();
         player.SetSpecialChar();
-        //userNameInput.GetComponentInChildren<Text>().text = userName;
+        //reset preventSpawnBoss
+        preventSpawnBoss = false;
     }
 
     private void Start()
@@ -79,12 +100,13 @@ public class GameManager : MonoBehaviour
         mainMenuControllerCG = mainMenuControllerScript.gameObject.GetComponent<CanvasGroup>();
     }
 
-    private IEnumerator SetStage(bool isInstance)
+    private IEnumerator SetMainMenu(bool isInstance)
     {
         if (isInstance)
         {
             //set stage if instance != null
             yield return StartCoroutine(TurnOnStageButton());
+            yield return StartCoroutine(UpdatePlayerInfoInStart());
             yield return StartCoroutine(DestroyGameObject());
         }
         else
@@ -93,6 +115,7 @@ public class GameManager : MonoBehaviour
             //- turn on stage button based on player achievement
             yield return StartCoroutine(LoadData());
             yield return StartCoroutine(TurnOnStageButton());
+            yield return StartCoroutine(UpdatePlayerInfoInStart());
         }
 
     }
@@ -117,6 +140,12 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0);
         //Debug.Log("set stage = " + GameManager.instance.stagePassedNo);
         TurnStageButton(true, 0, GameManager.instance.stagePassedNo + 1);
+    }
+
+    private IEnumerator UpdatePlayerInfoInStart()
+    {
+        yield return new WaitForSeconds(0);
+        mainMenuControllerScript.UpdatePlayerInfo(player.levelPlayer, pesos, stagePassedNo);
     }
 
     //stageButton - turn on/off
@@ -161,40 +190,63 @@ public class GameManager : MonoBehaviour
         if (pesos >= itemPrices[itemSelection])
         {
             pesos -= itemPrices[itemSelection];
-            Debug.Log("buy item");
-            //check potion type
-            switch (itemSelection)
-            {
-                //small hp potion
-                case 0:
-                    player.Heal(10, true);
-                    break;
-                //small mp potion
-                case 1:
-                    player.Heal(10, false);
-                    break;
-                //small exp potion
-                case 2:
-                    GrantXp(10);
-                    break;
-                //big hp potion
-                case 3:
-                    player.Heal(40, true);
-                    break;
-                //big mp potion
-                case 4:
-                    player.Heal(40, false);
-                    break;
-                //big exp potion
-                case 5:
-                    GrantXp(40);
-                    break;
-                default:
-                    break;
-            }
+            RewardBuyItem(itemSelection);
+            SaveState();
             return true;
         }
+        //if not enough will show ads and ad show count is lower than 7
+        else if (rewardedAdCount < 7)
+        {
+            rewardedAdCount++;
+            adsInitializer.LoadRewardedAd();
+            //if player finsih watch ads
+            if (adsInitializer.rewardPlayer == true)
+            {
+                RewardBuyItem(itemSelection);
+                adsInitializer.rewardPlayer = false;
+            }
+            SaveState();
+            return true;
+        }
+        //alert ad not available
+        ShowAlert("Ad not available", 18, Color.white, 0.7f);
+        SaveState();
         return false;
+    }
+
+    private void RewardBuyItem(int item)
+    {
+        Debug.Log("buy item");
+        //check potion type
+        switch (item)
+        {
+            //small hp potion
+            case 0:
+                player.Heal(20, true);
+                break;
+            //small mp potion
+            case 1:
+                player.Heal(20, false);
+                break;
+            //small exp potion
+            case 2:
+                GrantXp(20);
+                break;
+            //big hp potion
+            case 3:
+                player.Heal(50, true);
+                break;
+            //big mp potion
+            case 4:
+                player.Heal(50, false);
+                break;
+            //big exp potion
+            case 5:
+                GrantXp(50);
+                break;
+            default:
+                break;
+        }
     }
 
     //experience system
@@ -207,6 +259,9 @@ public class GameManager : MonoBehaviour
             add += xpTable[r];
             r++;
         }
+        //prevent from set level 0
+        if (r == 0)
+            r = 1;
         //fill in info
         infoLevelText.text = "Lv " + r;
         //set leyer player
@@ -234,7 +289,7 @@ public class GameManager : MonoBehaviour
     //when lvl up
     public void OnLevelUp()
     {
-        player.OnLevelUp();
+        player.OnLevelUp(true);
         //for raise hp mp after level up 
         OnHitpointChange();
         OnManapointChange();
@@ -270,11 +325,14 @@ public class GameManager : MonoBehaviour
         //save variable
         SaveData data = new SaveData();
         // data.userName = userName;
+        data.date = System.DateTime.Now.ToString("MM/dd/yyyy");
         data.pesos = pesos;
         data.experience = experience;
         data.level = player.levelPlayer;
         data.damage = player.damage;
         data.stage = stagePassedNo;
+        data.rewardedAdCount = rewardedAdCount;
+        data.preventSpawnBoss = preventSpawnBoss;
         //transform instance to json
         string json = JsonUtility.ToJson(data);
         //method to write string to a file
@@ -293,12 +351,14 @@ public class GameManager : MonoBehaviour
         player.SetLevelPlayer(1);
         player.SetDamagePlayer(1);
         stagePassedNo = 0;
+        preventSpawnBoss = false;
         // userName = "";
         SaveState();
         Debug.Log("Resetsave");
         SceneManager.sceneLoaded += LoadState;
         Debug.Log("Resetload");
         TurnStageButton(false, 1, startButtons.Length);
+        mainMenuControllerScript.UpdatePlayerInfo(player.levelPlayer, pesos, stagePassedNo);
         try
         {
             player.ResetSpecialChar();
@@ -327,11 +387,20 @@ public class GameManager : MonoBehaviour
             //change player info
             // userName = dataLoad.userName;
             //Debug.Log(userName);
+            dateSave = dataLoad.date;
             pesos = dataLoad.pesos;
             experience = dataLoad.experience;
             player.SetLevel(dataLoad.level);
             player.SetDamagePlayer(dataLoad.damage);
             stagePassedNo = dataLoad.stage;
+            rewardedAdCount = dataLoad.rewardedAdCount;
+            preventSpawnBoss = dataLoad.preventSpawnBoss;
+
+            //check if current date = save date
+            //refresh rewardedAdCount every day
+            if (dateNow != dateSave)
+                rewardedAdCount = 0;
+
             //set level of player
             if (GetCurrentLevel() != 1)
                 player.SetLevel(GetCurrentLevel());
@@ -391,9 +460,18 @@ public class GameManager : MonoBehaviour
             stagePassedNo = num;
     }
 
-    //Back to MainMenuScene
+    //reset preventSpawnBoss
+    public void SetPreventSpawnBoss(bool state)
+    {
+        preventSpawnBoss = state;
+    }
+
+    //Back to MainMenuScene - backToMenu btn
     public void BackToMenu()
     {
+        preventSpawnBoss = false;
+        //show ads interstitial
+        adsInitializer.LoadInterstitialAd();
         //set spawnPoint to be same position as when player left
         //spawnPointName = "SpawnPoint";
         // string name = SceneManager.GetActiveScene().name;
@@ -414,4 +492,17 @@ public class GameManager : MonoBehaviour
     {
         isPaused = isPausedGame;
     }
+
+    public void PlaySoundExitStage()
+    {
+        gameManagerSound.PlayOneShot(exitStageMusic);
+    }
+
+    // show alert
+    public void ShowAlert(string msg, int fontSize, Color color, float duration)
+    {
+        alert.SetActive(true);
+        StartCoroutine(alert.GetComponent<Alert>().Show(msg, fontSize, color, duration));
+    }
+
 }
