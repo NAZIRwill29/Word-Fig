@@ -13,8 +13,6 @@ public class Word : MonoBehaviour
     public int totalCharInWord;
     public Keyboard keyboard;
     private GameObject targetChar;
-    private AudioSource wordAudio;
-    public AudioClip triggerSound;
     public Player player;
     public CharObj charObj;
     private int damage;
@@ -25,7 +23,6 @@ public class Word : MonoBehaviour
             ',', ' ', '\n', '\r'},
             System.StringSplitOptions.RemoveEmptyEntries
         ));
-        wordAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -70,9 +67,13 @@ public class Word : MonoBehaviour
             //shoot word
             charObj.charAnim.SetTrigger("show");
             charObj.ShootWord(targetChar, damage, letterCombine);
-            wordAudio.PlayOneShot(triggerSound, 1.0f);
+            player.PlaySoundWord();
             //increase mana and hp by refer on letter in word
             player.Heal(damage);
+        }
+        else
+        {
+            player.PlaySoundFailed();
         }
         //stop word blink
     }

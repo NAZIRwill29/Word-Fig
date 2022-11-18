@@ -137,7 +137,8 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  triggerSound: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
+  triggerSound: {fileID: 8300000, guid: 0e89b476d4715fd42935e9900eedb033, type: 3}
+  specialPower: 
   emptyChest: {fileID: -8167126452187029819, guid: 94df8f6ff8ad0bf48a0fd9b618401b16, type: 3}
   pesosAmount: 5
 --- !u!82 &3223082008516375769

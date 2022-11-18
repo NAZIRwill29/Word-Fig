@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6485792763249090109}
   - component: {fileID: 4872860413660828952}
   - component: {fileID: 5172742234830850133}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CampFire2_2
-  m_TagString: Untagged
+  m_TagString: Blocking
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

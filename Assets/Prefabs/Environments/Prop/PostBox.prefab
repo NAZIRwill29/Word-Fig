@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6908432276273310147}
   - component: {fileID: 533420816933898268}
   - component: {fileID: 9057521320913654930}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PostBox
-  m_TagString: Untagged
+  m_TagString: Blocking
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

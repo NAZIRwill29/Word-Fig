@@ -137,10 +137,11 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  triggerSound: {fileID: 8300000, guid: 113ee460fadc340e4957a7404a9fbb27, type: 3}
+  triggerSound: {fileID: 8300000, guid: 05ee4a71ebcbc914f982a53894af1ef6, type: 3}
   sceneNames:
   - SampleScene
   - Dungeon1
+  spawnPointName: 
 --- !u!82 &4021279465231209890
 AudioSource:
   m_ObjectHideFlags: 0

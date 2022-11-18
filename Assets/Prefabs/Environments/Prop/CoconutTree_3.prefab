@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4974561020020613359}
   - component: {fileID: 4974561020020613358}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CoconutTree_3
-  m_TagString: Untagged
+  m_TagString: Blocking
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

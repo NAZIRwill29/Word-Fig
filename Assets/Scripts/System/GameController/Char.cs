@@ -23,6 +23,9 @@ public class Char : MonoBehaviour
         keyboardScript = keyboard.GetComponent<Keyboard>();
         wordScript = keyboardScript.wordObject.GetComponent<Word>();
         imageImg = image.GetComponent<Image>();
+        //stop aniamtor if exist
+        if (GetComponent<Animator>())
+            GetComponent<Animator>().StartPlayback();
     }
 
     //action after button char click
@@ -33,6 +36,7 @@ public class Char : MonoBehaviour
             //function button in keyboard
             if (wordScript.totalCharInWord < 8)
             {
+                //success shoot
                 keyboardScript.ButtonClick();
                 //shoot charObj
                 keyboardScript.CharToShoot(letter, special, idChar);
@@ -41,6 +45,8 @@ public class Char : MonoBehaviour
             }
             else
             {
+                //failed shoot
+                GameManager.instance.player.PlaySoundFailed();
                 //make word blink
                 wordScript.gameObject.GetComponent<Animator>().SetInteger("Number", 1);
                 StartCoroutine(WordIdle());
@@ -49,6 +55,7 @@ public class Char : MonoBehaviour
         else
         {
             //function button in wordbox
+            GameManager.instance.player.PlaySoundReject();
             AddToBirthchar(true);
         }
     }
@@ -56,6 +63,9 @@ public class Char : MonoBehaviour
     //add to keyboard
     public void AddToKeyboard()
     {
+        //check exist
+        if (GetComponent<Animator>())
+            GetComponent<Animator>().StopPlayback();
         WriteLetter();
         transform.SetParent(keyboard.transform, true);
     }
@@ -63,6 +73,9 @@ public class Char : MonoBehaviour
     //add to temp
     private void AddToTemp()
     {
+        //stop aniamtor if exist
+        if (GetComponent<Animator>())
+            GetComponent<Animator>().StartPlayback();
         transform.SetParent(keyboardScript.tempChar.transform, true);
     }
 

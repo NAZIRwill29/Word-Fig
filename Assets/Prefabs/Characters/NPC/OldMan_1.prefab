@@ -137,7 +137,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  triggerSound: {fileID: 8300000, guid: 834bc99524a174a378e982623582c06d, type: 3}
+  triggerSound: {fileID: 8300000, guid: 4680cdb66c459734cada2721eb86d7b6, type: 3}
   message: 'Hello young lad! '
 --- !u!82 &2509709243496655354
 AudioSource:

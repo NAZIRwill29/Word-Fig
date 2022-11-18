@@ -10,6 +10,8 @@ public class Ball : MonoBehaviour
     public Transform shooterTransform;
     [SerializeField]
     private int damage = 1;
+    [Tooltip("thunder / ice / fire / wind")]
+    public string specialPower;
     private void Start()
     {
         ballRb = GetComponent<Rigidbody2D>();
@@ -61,11 +63,22 @@ public class Ball : MonoBehaviour
         };
         //send message to other to make call ReceiveDamage function
         other.SendMessage("ReceiveDamage", dmg);
+        //send special damage 
+        if (specialPower != "")
+            SendSpecialDamage(other);
         isShoot = false;
         //stop force
         ballRb.velocity = Vector2.zero;
         //make to original posistion
         gameObject.transform.position = shooterTransform.position;
+    }
+
+    //send special damage to player
+    private void SendSpecialDamage(Collider2D coll)
+    {
+        //send damage value to player
+        coll.GetComponent<Player>().ChangeEnemyDamage(damage);
+        coll.SendMessage("ReceiveSpecialPowerDamage", specialPower);
     }
 
     //set isShoot
