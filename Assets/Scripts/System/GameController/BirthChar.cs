@@ -34,12 +34,14 @@ public class BirthChar : MonoBehaviour
             lastSpawn = Time.time;
             if (totalCharInKeyboard < 16)
             {
+                //success add char
                 chars = GetComponentsInChildren<Char>();
                 //spawn object under parent
                 //Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent)
                 //Instantiate(charPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
                 chars[Random.Range(0, chars.Length)].AddToKeyboard();
                 totalCharInKeyboard += 1;
+                player.PlaySoundReload();
                 // Debug.Log(totalCharInKeyboard);
                 //decrease mana
                 player.ChangeMana(-1);
@@ -47,6 +49,8 @@ public class BirthChar : MonoBehaviour
             }
             else
             {
+                //failed add char
+                player.PlaySoundFailed();
                 //make keyboard blink
                 KeyboardAnimator.SetInteger("Number", 1);
                 StartCoroutine(KeyboardIdle());

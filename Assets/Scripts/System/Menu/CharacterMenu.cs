@@ -12,6 +12,22 @@ public class CharacterMenu : MonoBehaviour
     private int currentItemSelection = 0;
     public Image characterSelectionSprite, itemSelectionSprite;
     public RectTransform xpBar;
+    private AudioSource menuAudio;
+    //      0           1           2           3           4
+    //  open menu - buy item - toggle item - exit menu - failed buy
+    public AudioClip[] menuSound;
+
+    private void Start()
+    {
+        menuAudio = GetComponent<AudioSource>();
+    }
+
+    //open menu
+    public void OpenMenu()
+    {
+        menuAudio.PlayOneShot(menuSound[0], 1.0f);
+        UpdateMenu();
+    }
 
     //character selection
     public void OnArrowClick(bool right)
@@ -40,6 +56,7 @@ public class CharacterMenu : MonoBehaviour
     {
         characterSelectionSprite.sprite = GameManager.instance.playerSprites[currentCharacterSelection];
         GameManager.instance.player.SwapSprite(currentCharacterSelection);
+        menuAudio.PlayOneShot(menuSound[2], 1.0f);
     }
 
     //item selection
@@ -70,13 +87,23 @@ public class CharacterMenu : MonoBehaviour
         itemSelectionSprite.sprite = GameManager.instance.itemSprites[currentItemSelection];
         buyText.text = GameManager.instance.itemPrices[currentItemSelection].ToString();
         itemText.text = GameManager.instance.itemNames[currentItemSelection].ToString();
+        menuAudio.PlayOneShot(menuSound[2], 1.0f);
     }
 
-    //buy item
+    //buy item - buy item btn
     public void BuyItem()
     {
         if (GameManager.instance.TryBuyPotion(currentItemSelection))
+        {
+            //success buy
             UpdateMenu();
+            menuAudio.PlayOneShot(menuSound[1], 1.0f);
+        }
+        else
+        {
+            //failed buy
+            menuAudio.PlayOneShot(menuSound[4], 1.0f);
+        }
     }
 
     //upgrade char info -call from menubutton
@@ -112,6 +139,7 @@ public class CharacterMenu : MonoBehaviour
     //exit menu
     public void ExitMenu()
     {
+        menuAudio.PlayOneShot(menuSound[3], 1.0f);
         //set unpause game
         GameManager.instance.ChangeIsPaused(false);
         GameManager.instance.inGameUI.GetComponent<CanvasGroup>().alpha = 1;

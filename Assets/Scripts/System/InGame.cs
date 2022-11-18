@@ -10,6 +10,12 @@ public class InGame : MonoBehaviour
     [SerializeField]
     private string stageName;
     private MainMenuController mainMenuControllerScript;
+    private AudioSource inGameAudio;
+    public GameObject boss, bossHp;
+    //clearStageSound
+    [Tooltip("clearStageSound")]
+    public AudioClip[] inGameSound;
+    public BackgroundMusic backgroundMusicScript;
     void Awake()
     {
         mainMenuControllerScript = GameManager.instance.mainMenuControllerScript;
@@ -19,7 +25,9 @@ public class InGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        inGameAudio = GetComponent<AudioSource>();
+        PreventResapwnBoss();
+        Debug.Log("prevent");
     }
 
     // Update is called once per frame
@@ -33,5 +41,19 @@ public class InGame : MonoBehaviour
     {
         //pass stageNo to gameManager
         GameManager.instance.PassStagePassed(stageNo);
+        inGameAudio.PlayOneShot(inGameSound[0], 1.0f);
+        backgroundMusicScript.ClearStageMusic();
+        GameManager.instance.SetPreventSpawnBoss(true);
+    }
+
+    //prevent boss from respawn
+    private void PreventResapwnBoss()
+    {
+        //check preventspawnBoss, boss exist, bossHp exist
+        if (GameManager.instance.preventSpawnBoss && boss && bossHp)
+        {
+            boss.SetActive(false);
+            bossHp.SetActive(false);
+        }
     }
 }

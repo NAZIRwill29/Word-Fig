@@ -46,8 +46,6 @@ public class Keyboard : MonoBehaviour
         'Z'
     };
 
-    //TODO - boss movement, attack
-
     // Start is called before the first frame update
     void Start()
     {
