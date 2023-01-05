@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Advertisements;
 
+// using UnityEngine.Advertisements;
+
+/*
 public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
     [SerializeField] string _androidGameId;
@@ -144,3 +146,4 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IU
     }
 
 }
+*/
