@@ -1204,7 +1204,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &800398006
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1217,10 +1217,11 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!212 &800398007
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -37567,6 +37568,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageNo: 1
   stageName: MainScene
+  boss: {fileID: 0}
+  bossHp: {fileID: 0}
   inGameSound: []
   backgroundMusicScript: {fileID: 1321860366}
 --- !u!1001 &2139925585
@@ -37721,6 +37724,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGameUI
       objectReference: {fileID: 0}
+    - target: {fileID: 173788763456068720, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1222
+      objectReference: {fileID: 0}
+    - target: {fileID: 173788763456068720, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 61
+      objectReference: {fileID: 0}
     - target: {fileID: 4107853743180055632, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
       propertyPath: enemy
       value: 
@@ -37739,15 +37750,15 @@ PrefabInstance:
       objectReference: {fileID: 4927590813407387022}
     - target: {fileID: 4107853744263571748, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
       propertyPath: offsetX
-      value: -20
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 4107853744263571748, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
       propertyPath: offsetY
-      value: 12
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 4107853744263571748, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
       propertyPath: lengthBar
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4107853744263571751, guid: 5d06940400164384fb1b4d9ee03b5cfe, type: 3}
       propertyPath: enemy
@@ -38094,6 +38105,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SingleCrate
       objectReference: {fileID: 0}
+    - target: {fileID: 6290871445969892638, guid: f5474ce7baf1fc449b07b3fc085d120f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7145046549312243838, guid: f5474ce7baf1fc449b07b3fc085d120f, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -38323,6 +38338,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045213351}
     m_Modifications:
+    - target: {fileID: 4390435472694636155, guid: 8822277e5df0f5349b1954f5a9520857, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6320469843026433250, guid: 8822277e5df0f5349b1954f5a9520857, type: 3}
       propertyPath: m_Name
       value: DoubleCrate
