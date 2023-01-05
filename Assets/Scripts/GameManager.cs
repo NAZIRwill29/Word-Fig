@@ -31,10 +31,12 @@ public class GameManager : MonoBehaviour
     public MainMenuController mainMenuControllerScript;
     public GameObject[] startButtons;
     public GameObject alert;
+    public CharacterMenu charactermenu;
     private string spawnPointName = "SpawnPoint1";
     [SerializeField]
     private int stagePassedNo;
     public bool isPaused = false, preventSpawnBoss;
+    [Tooltip("no need drag drop")]
     public GameObject inGameUI;
     private CanvasGroup canvasCG;
     private CanvasGroup mainMenuControllerCG;
@@ -45,9 +47,9 @@ public class GameManager : MonoBehaviour
     public AudioSource gameManagerSound;
     public Image infoStatusImage;
     public Sprite[] statusSprites;
-    public AdsInitializer adsInitializer;
-    [SerializeField]
-    private int rewardedAdCount = 0;
+    //ads
+    public AdsMediateInitializer AdsMediateInitializer;
+    public int rewardedAdCount = 0;
     public string dateSave;
     public string dateNow;
 
@@ -71,6 +73,8 @@ public class GameManager : MonoBehaviour
     {
         //get current date
         dateNow = System.DateTime.Now.ToString("MM/dd/yyyy");
+        //initialize ads
+        AdsMediateInitializer.OnInitializeClicked();
         //check if have gameObject
         if (GameManager.instance != null)
         {
@@ -192,29 +196,26 @@ public class GameManager : MonoBehaviour
             pesos -= itemPrices[itemSelection];
             RewardBuyItem(itemSelection);
             SaveState();
+            charactermenu.UpdateMenu();
             return true;
         }
         //if not enough will show ads and ad show count is lower than 7
         else if (rewardedAdCount < 7)
         {
-            rewardedAdCount++;
-            adsInitializer.LoadRewardedAd();
-            //if player finsih watch ads
-            if (adsInitializer.rewardPlayer == true)
-            {
-                RewardBuyItem(itemSelection);
-                adsInitializer.rewardPlayer = false;
-            }
-            SaveState();
+            //show ads TODO()
+            AdsMediateInitializer.ShowRewardedAd("TryBuyPotion", itemSelection);
+            //initialize ads
+            AdsMediateInitializer.OnInitializeClicked();
+            //
             return true;
         }
         //alert ad not available
-        ShowAlert("Ad not available", 18, Color.white, 0.7f);
+        ShowAlert("Ad not available", 25, Color.red, 0.7f);
         SaveState();
         return false;
     }
 
-    private void RewardBuyItem(int item)
+    public void RewardBuyItem(int item)
     {
         Debug.Log("buy item");
         //check potion type
@@ -470,8 +471,8 @@ public class GameManager : MonoBehaviour
     public void BackToMenu()
     {
         preventSpawnBoss = false;
-        //show ads interstitial
-        adsInitializer.LoadInterstitialAd();
+        //show ads interstitial TODO()
+        //AdsMediateInitializer.LoadInterstitialAd();
         //set spawnPoint to be same position as when player left
         //spawnPointName = "SpawnPoint";
         // string name = SceneManager.GetActiveScene().name;
